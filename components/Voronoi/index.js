@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 //import { random } from '../helpers/index'
-import { random, createVoronoiTessellation } from './helpers'
+import { random, createVoronoiTessellation } from '../../helpers/helpers'
 import { SVG } from '@svgdotjs/svg.js'
 
 function Voronoi(props) {

@@ -1,3 +1,8 @@
+/*
+  Contents of this file was taken from select files from:
+  https://github.com/georgedoescode/generative-utils
+*/
+
 import { Delaunay } from 'd3-delaunay'
 import { polygonCentroid } from 'd3'
 //import { distToSegment } from './distToSegment'
