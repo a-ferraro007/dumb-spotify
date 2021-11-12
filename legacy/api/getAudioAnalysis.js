@@ -2,8 +2,6 @@
 
 export default async (req, res) => {
   const { access_token, id } = req.query
-  console.log('auth', access_token, id)
-
   const baseURI = `https://api.spotify.com/v1/audio-analysis/${id}/`
 
   try {
@@ -14,9 +12,7 @@ export default async (req, res) => {
         'Content-Type': 'application/json'
       }
     })
-    console.log(res)
     const data = await resp.json()
-    console.log(data)
     res.status(200).json({ data })
   } catch (error) {
     console.error(error)

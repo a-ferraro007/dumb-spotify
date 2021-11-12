@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react'
-import Voronoi from '../components/Voronoi'
 import { getNewAuthTokens } from '../lib/auth/authorize'
 import { getCookie } from '../lib/getCookie'
 import styles from '../styles/Home.module.css'
 
 const Home = () => {
   const [userPlaylists, setUserPlaylists] = useState([])
-  const [currentTrackListing, setCurrentTrackListing] = useState([])
-  const [isCreating, setIsCreating] = useState(false)
   const [showTracks, setShowTracks] = useState(true)
-  const [showPattern, setShowPattern] = useState(false)
 
   useEffect(() => {
     const refreshToken = getCookie('refresh_token')
@@ -22,58 +18,48 @@ const Home = () => {
           `api/getUserPlaylists?access_token=${data.access_token}`
         )
         const res = await req.json()
+
         const tmp = res.data.items.map((item) => {
           return {
             name: item.name,
             playlistId: item.id,
             trackCount: item.tracks,
-            tracksListObj: item.tracks.total
+            trackTotal: item.tracks.total,
+            reqCount: Math.round((item.tracks.total / 100) + .5)
           }
         })
         setUserPlaylists([...tmp])
-        console.log(res)
       } catch (error) {
         console.error(error)
       }
     })()
   }, [])
 
-  const handleGetTracksList = async (id) => {
-    try {
-      const data = await getNewAuthTokens()
-      console.log('accessToken', data)
-      const req = await fetch(
-        `api/getTracksList?access_token=${data.access_token}&id=${id}`
-      )
-      const res = await req.json()
-      const tmp = res.data.items.map((item) => {
-        return {
-          name: item.track.name,
-          trackId: item.track.id,
-          artistArray: item.track.artists
-        }
-      })
-      setCurrentTrackListing([...tmp])
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const handleForkPlaylist = async (playlist) => {
+    const data = await getNewAuthTokens()
 
-  const handleSelectTrack = async (id) => {
-    setIsCreating(true)
-    setShowTracks(false)
     try {
-      const data = await getNewAuthTokens()
-      console.log('accessToken', data)
-      const req = await fetch(
-        `api/getTrackAnalysis?access_token=${data.access_token}&id=${id}`
+      const getUris = await fetch(
+        `api/getTracksList?access_token=${data.access_token}&id=${playlist.playlistId}&reqCount=${playlist.reqCount}&total=${playlist.trackTotal}`
       )
-      const res = await req.json()
-      console.log(res)
-      setTimeout(() => {
-        setIsCreating(false)
-        setShowPattern(true)
-      }, 3000)
+
+      const getUrisRes = await getUris.json()
+      const trackUris = getUrisRes.tracks.map((item) => {
+        return  item.track.uri
+      })
+
+      const createPlaylist = await fetch(`api/createPlaylist`, {
+        method:"POST",
+        body: JSON.stringify({
+          access_token: data.access_token,
+          uris: trackUris,
+          total: trackUris.length,
+          name: playlist.name,
+          reqCount: playlist.reqCount
+        })}
+      )
+      await createPlaylist.json()
+
     } catch (error) {
       console.error(error)
     }
@@ -88,22 +74,10 @@ const Home = () => {
               return (
                 <li key={index}>
                   <button
-                    onClick={() => handleGetTracksList(playlist.playlistId)}
-                  >
+                    onClick={() => handleForkPlaylist(playlist)}
+                    >
                     {' '}
                     {playlist.name}{' '}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-          <ul>
-            {currentTrackListing?.map((track, index) => {
-              return (
-                <li key={index}>
-                  <button onClick={() => handleSelectTrack(track.trackId)}>
-                    {' '}
-                    {track.name}{' '}
                   </button>
                 </li>
               )
@@ -112,11 +86,41 @@ const Home = () => {
         </div>
       ) : (
         <></>
-      )}
-      {isCreating ? <div>CREATING....</div> : <> </>}
-      {showPattern ? <Voronoi /> : <> </>}
+        )}
     </>
   )
 }
 
 export default Home
+
+//const [currentTrackListing, setCurrentTrackListing] = useState([])
+//const [isCreating, setIsCreating] = useState(false)
+//const [showPattern, setShowPattern] = useState(false)
+//const [formedData, setFormedData] = useState()
+//const [analysisData, setAnalysisData] = useState()
+//const handleSelectTrack = async (id) => {
+//  setIsCreating(true)
+//  setShowTracks(false)
+//  try {
+//    const data = await getNewAuthTokens()
+//    console.log('accessToken', data)
+//    const req = await fetch(
+//      `api/getAudioAnalysis?access_token=${data.access_token}&id=${id}`
+//    )
+//    const featuresReq = await fetch(
+//      `api/getAudioFeatures?access_token=${data.access_token}&id=${id}`
+//    )
+//    const res = await req.json()
+//    const featuresRes = await featuresReq.json()
+//    setFormedData(featuresRes.formed)
+//    setAnalysisData(res.data)
+//    console.log(res)
+
+//    setTimeout(() => {
+//      setIsCreating(false)
+//      setShowPattern(true)
+//    }, 1000)
+//  } catch (error) {
+//    console.error(error)
+//  }
+//}

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import Voronoi from '../components/Voronoi'
+//import Voronoi from '../components/Voronoi'
 import styles from '../styles/Home.module.css'
 import { authorizationCode, getAuthTokens } from '../lib/auth/authorize'
 

@@ -22,9 +22,9 @@ export default async (req, res) => {
       }
       //body: params
     })
-    console.log(res)
+    //console.log(res)
     const data = await resp.json()
-    console.log(data)
+    //console.log(data)
     res.status(200).json({ data })
   } catch (error) {
     console.error(error)
