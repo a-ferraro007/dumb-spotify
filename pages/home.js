@@ -87,7 +87,7 @@ const Home = () => {
         body: JSON.stringify({
           playlist_id: id,
           master_playlist_id: playlist.playlistId,
-          spotify_id: "aferraro1",
+          spotify_id: "", //hardcoded until i can keep the userId in state somewhere
           uris: { tracks: trackUris },
         }),
       })
