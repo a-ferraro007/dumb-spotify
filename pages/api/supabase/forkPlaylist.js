@@ -10,7 +10,7 @@ export default async (req, res) => {
         playlist_id,
         master_playlist_id,
         spotify_id,
-        uris, //: JSON.stringify(uris),
+        uris,
         playlist,
       },
     ])

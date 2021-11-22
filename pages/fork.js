@@ -70,46 +70,19 @@ const Home = () => {
 
   const handleForkPlaylist = async (playlist) => {
     try {
-      const getUris = await fetch(
-        `api/spotify/getTracksList?access_token=${session.access_token}&id=${playlist.playlistId}&reqCount=${playlist.reqCount}&total=${playlist.trackTotal}`
-      )
-
-      const getUrisRes = await getUris.json()
-      const trackUris = getUrisRes.tracks.map((item) => {
-        return item.track.uri
-      })
-
-      const createPlaylist = await fetch(`api/spotify/createPlaylist`, {
+      const forkPlaylist = await fetch(`api/spotify/forkPlaylist`, {
         method: "POST",
         body: JSON.stringify({
           access_token: session.access_token,
-          uris: trackUris,
-          total: trackUris.length,
           name: playlist.name,
           reqCount: playlist.reqCount,
           owner: playlist.owner.display_name,
-        }),
-      })
-      const item = await createPlaylist.json()
-
-      const addForkToDBReq = await fetch(`api/supabase/forkPlaylist`, {
-        method: "POST",
-        body: JSON.stringify({
-          playlist_id: item.id,
           master_playlist_id: playlist.playlistId,
-          spotify_id: "aferraro1", //hardcoded until i can keep the userId in state somewhere
-          uris: { tracks: trackUris },
-          playlist: {
-            name: item.name,
-            playlistId: item.id,
-            trackCount: item.tracks,
-            trackTotal: item.tracks.total,
-            reqCount: Math.round(item.tracks.total / 100 + 0.5),
-            owner: item.owner,
-          },
+          total: playlist.trackTotal,
         }),
       })
-      await addForkToDBReq.json()
+      const fork = await forkPlaylist.json()
+      console.log(fork)
     } catch (error) {
       console.error(error)
     }
