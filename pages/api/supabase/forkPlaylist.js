@@ -1,8 +1,8 @@
-import { supabase } from "../../../lib/supabase"
+import { supabase } from "../../../lib/supabase/client"
+
 export default async (req, res) => {
-  const { playlist_id, master_playlist_id, spotify_id, uris } = JSON.parse(
-    req.body
-  )
+  const { playlist_id, master_playlist_id, spotify_id, uris, playlist } =
+    JSON.parse(req.body)
   console.log(playlist_id)
   try {
     const { data, error } = await supabase.from("forked_playlists").insert([
@@ -11,6 +11,7 @@ export default async (req, res) => {
         master_playlist_id,
         spotify_id,
         uris, //: JSON.stringify(uris),
+        playlist,
       },
     ])
 

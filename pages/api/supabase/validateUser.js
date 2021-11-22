@@ -1,4 +1,5 @@
-import { supabase } from "../../../lib/supabase"
+import { supabase } from "../../../lib/supabase/client"
+
 export default async (req, resp) => {
   const { id } = JSON.parse(req.body)
   try {

@@ -5,8 +5,8 @@ export default async (req, res) => {
   let offset = 0
   console.log(id)
   for (let index = 0; index < reqCount; index++) {
-    console.log("total", total)
-    console.log("offset" + offset)
+    //console.log("total", total)
+    //console.log("offset" + offset)
 
     const baseURI = `https://api.spotify.com/v1/playlists/${id}/tracks?offset=${offset}`
     const req = fetch(baseURI, {
@@ -46,7 +46,7 @@ export default async (req, res) => {
 
     res.status(200).json({ tracks })
   } catch (error) {
-    console.error("e", error)
+    console.error("eeee", error)
     res.status(400)
   }
 }

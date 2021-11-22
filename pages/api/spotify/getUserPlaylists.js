@@ -1,7 +1,7 @@
 export default async (req, res) => {
   const { access_token } = req.query
   const baseURI = "https://api.spotify.com/v1/me/playlists"
-  console.log(access_token)
+
   try {
     const resp = await fetch(baseURI, {
       method: "GET",

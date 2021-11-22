@@ -12,6 +12,7 @@ const Home = () => {
   const [refreshToken, setRefreshToken] = useState({})
   const [session, setSession] = useState({ access_token: null })
   const [userPlaylists, setUserPlaylists] = useState([])
+  const [forkedPlaylists, setForkedPlaylists] = useState([])
   const [showTracks, setShowTracks] = useState(true)
   //const [userId, setUserID] = useState("")
 
@@ -27,11 +28,12 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
+    console.log(session)
     if (!session.access_token) return
     ;(async () => {
       try {
         const req = await fetch(
-          `api/getUserPlaylists?access_token=${session.access_token}`
+          `api/spotify/getUserPlaylists?access_token=${session.access_token}`
         )
         const res = await req.json()
 
@@ -48,10 +50,18 @@ const Home = () => {
         setUserPlaylists([...tmp])
 
         const getForkedPlaylistsReq = await fetch(
-          `api/supabase/getForkedPlaylists`
+          `api/supabase/getForkedPlaylists?id=${"aferraro1"}`
         )
         const getForkedPlaylistsRes = await getForkedPlaylistsReq.json()
-        console.log(getForkedPlaylistsRes[0])
+        console.log(getForkedPlaylistsRes)
+        let n = getForkedPlaylistsRes.map((e) => {
+          return {
+            id: e.playlist_id,
+            master_id: e.master_playlist_id,
+            playlist: e.playlist,
+          }
+        })
+        setForkedPlaylists([...n])
       } catch (error) {
         console.error(error)
       }
@@ -61,7 +71,7 @@ const Home = () => {
   const handleForkPlaylist = async (playlist) => {
     try {
       const getUris = await fetch(
-        `api/getTracksList?access_token=${session.access_token}&id=${playlist.playlistId}&reqCount=${playlist.reqCount}&total=${playlist.trackTotal}`
+        `api/spotify/getTracksList?access_token=${session.access_token}&id=${playlist.playlistId}&reqCount=${playlist.reqCount}&total=${playlist.trackTotal}`
       )
 
       const getUrisRes = await getUris.json()
@@ -69,7 +79,7 @@ const Home = () => {
         return item.track.uri
       })
 
-      const createPlaylist = await fetch(`api/createPlaylist`, {
+      const createPlaylist = await fetch(`api/spotify/createPlaylist`, {
         method: "POST",
         body: JSON.stringify({
           access_token: session.access_token,
@@ -80,18 +90,39 @@ const Home = () => {
           owner: playlist.owner.display_name,
         }),
       })
+      const item = await createPlaylist.json()
 
-      const { id } = await createPlaylist.json()
       const addForkToDBReq = await fetch(`api/supabase/forkPlaylist`, {
         method: "POST",
         body: JSON.stringify({
-          playlist_id: id,
+          playlist_id: item.id,
           master_playlist_id: playlist.playlistId,
-          spotify_id: "", //hardcoded until i can keep the userId in state somewhere
+          spotify_id: "aferraro1", //hardcoded until i can keep the userId in state somewhere
           uris: { tracks: trackUris },
+          playlist: {
+            name: item.name,
+            playlistId: item.id,
+            trackCount: item.tracks,
+            trackTotal: item.tracks.total,
+            reqCount: Math.round(item.tracks.total / 100 + 0.5),
+            owner: item.owner,
+          },
         }),
       })
       await addForkToDBReq.json()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleUpdatePlaylist = async (id, master_id) => {
+    console.log(id, master_id, session)
+    try {
+      const updatePlaylistReq = await fetch(
+        `api/spotify/updateForkedPlaylist?access_token=${
+          session.access_token
+        }&id=${id}&master_id=${master_id}&spotify_id=${"aferraro1"}`
+      )
     } catch (error) {
       console.error(error)
     }
@@ -108,6 +139,22 @@ const Home = () => {
                   <button onClick={() => handleForkPlaylist(playlist)}>
                     {" "}
                     {playlist.name}{" "}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+          <ul>
+            {forkedPlaylists?.map((fork, index) => {
+              return (
+                <li key={index}>
+                  <button
+                    onClick={() =>
+                      handleUpdatePlaylist(fork.id, fork.master_id)
+                    }
+                  >
+                    {" "}
+                    {fork.playlist.name}{" "}
                   </button>
                 </li>
               )
