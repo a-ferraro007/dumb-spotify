@@ -1,40 +1,13 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
-//import { supabase } from "../lib/supabase"
-//import Voronoi from '../components/Voronoi'
 import styles from "../styles/Home.module.css"
-//import { authorizationCode, getAuthTokens } from "../lib/auth/authorize"
 import { useAuth } from "../context/auth"
-import { useEffect } from "react"
 
 export default function Login() {
-  console.log("tear")
   const router = useRouter()
   const { authorizationCode } = useAuth()
-  //const { session, loading } = useAuth()
 
-  //useEffect(() => {
-  //  if (session) {
-  //    router.push("/home")
-  //    return
-  //  }
-  //}, [session])
-
-  const handleAuth = async () => {
-    const url = await authorizationCode(router)
-
-    //await supabase.auth.signIn(
-    //  {
-    //    provider: "spotify",
-    //  },
-    //  {
-    //    scopes:
-    //      "user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read playlist-modify-public playlist-modify-private",
-    //  }
-    //)
-  }
-
-  return true ? (
+  return (
     <>
       <div className={styles.container}>
         <Head>
@@ -44,11 +17,12 @@ export default function Login() {
         </Head>
 
         <main className={styles.main}>
-          <button onClick={handleAuth}> Log In </button>
+          <button onClick={async () => await authorizationCode(router)}>
+            {" "}
+            Log In{" "}
+          </button>
         </main>
       </div>
     </>
-  ) : (
-    <></>
   )
 }

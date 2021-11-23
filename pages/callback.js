@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useAuth } from "../context/auth"
-//import { getAuthTokens } from "../lib/auth/authorize"
 
 const callback = () => {
   const router = useRouter()
