@@ -3,7 +3,7 @@ export default async (req, res) => {
   let { total, reqCount } = req.query
   const promiseArray = []
   let offset = 0
-  console.log(id)
+
   for (let index = 0; index < reqCount; index++) {
     const baseURI = `https://api.spotify.com/v1/playlists/${id}/tracks?offset=${offset}`
     const req = fetch(baseURI, {

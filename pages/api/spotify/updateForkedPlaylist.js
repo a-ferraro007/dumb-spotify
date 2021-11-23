@@ -33,7 +33,6 @@ export default async (req, res) => {
       id,
       forkUriObj
     )
-    console.log("deleted uris", deletedUris)
 
     const { error } = updateForkedPlaylist(id, spotify_id, forkedUris)
     if (error) throw error
@@ -48,7 +47,7 @@ export default async (req, res) => {
       masterReqCount,
       masterTrackTotal
     )
-    const masterUris = getMasterPlaylistsTracksRes.map((item) => {
+    getMasterPlaylistsTracksRes.map((item) => {
       masterUriObj[item.track.uri] = true
       return item.track.uri
     })
