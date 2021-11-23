@@ -4,6 +4,7 @@ import { addForkToDB } from "../../../lib/supabase/utils"
 export default async (req, res) => {
   const { access_token, name, reqCount, owner, master_playlist_id, total } =
     JSON.parse(req.body)
+
   try {
     const getTracksRes = await getTracks(
       access_token,
@@ -14,7 +15,6 @@ export default async (req, res) => {
     const trackUris = getTracksRes.map((item) => {
       return item.track.uri
     })
-    console.log("trackUris", trackUris)
 
     const createPlaylistRes = await createPlaylist(
       access_token,
@@ -39,10 +39,10 @@ export default async (req, res) => {
       }
     )
     if (error) throw error
-    console.log("forked db resp", data)
+
     res.status(200).json(true)
   } catch (error) {
-    console.error(error)
-    res.status(400)
+    console.error("error forking playlist", error)
+    res.status(400).json(error)
   }
 }

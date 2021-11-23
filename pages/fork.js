@@ -31,13 +31,15 @@ const Home = () => {
     console.log(session)
     if (!session.access_token) return
     ;(async () => {
+      const usrTrackObj = {}
+      const deletedPlaylists = []
       try {
         const req = await fetch(
           `api/spotify/getUserPlaylists?access_token=${session.access_token}`
         )
         const res = await req.json()
-
         const tmp = res.data.items.map((item) => {
+          usrTrackObj[item.id] = true
           return {
             name: item.name,
             playlistId: item.id,
@@ -53,15 +55,27 @@ const Home = () => {
           `api/supabase/getForkedPlaylists?id=${"aferraro1"}`
         )
         const getForkedPlaylistsRes = await getForkedPlaylistsReq.json()
-        console.log(getForkedPlaylistsRes)
-        let n = getForkedPlaylistsRes.map((e) => {
-          return {
-            id: e.playlist_id,
-            master_id: e.master_playlist_id,
-            playlist: e.playlist,
+        const playlists = []
+        getForkedPlaylistsRes.forEach((e) => {
+          if (usrTrackObj[e.playlist_id]) {
+            playlists.push({
+              id: e.playlist_id,
+              master_id: e.master_playlist_id,
+              playlist: e.playlist,
+            })
+          } else {
+            deletedPlaylists.push(e.playlist_id)
           }
         })
-        setForkedPlaylists([...n])
+        setForkedPlaylists([...playlists])
+
+        await fetch(`api/supabase/deletePlaylists`, {
+          method: "POST",
+          body: JSON.stringify({
+            spotify_id: "aferraro1",
+            playlistIds: deletedPlaylists,
+          }),
+        })
       } catch (error) {
         console.error(error)
       }

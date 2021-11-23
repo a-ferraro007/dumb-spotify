@@ -14,7 +14,7 @@ export default async (req, res) => {
 
     res.status(200).json({ data })
   } catch (error) {
-    console.error(error)
-    res.status(400)
+    console.error("error getting user playlist", error)
+    res.status(400).json(error)
   }
 }

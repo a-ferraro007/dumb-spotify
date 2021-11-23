@@ -5,9 +5,6 @@ export default async (req, res) => {
   let offset = 0
   console.log(id)
   for (let index = 0; index < reqCount; index++) {
-    //console.log("total", total)
-    //console.log("offset" + offset)
-
     const baseURI = `https://api.spotify.com/v1/playlists/${id}/tracks?offset=${offset}`
     const req = fetch(baseURI, {
       method: "GET",
@@ -35,9 +32,8 @@ export default async (req, res) => {
           })
         )
       })
-      .catch((err) => {
-        //console.log("ere")
-        //console.log(err)
+      .catch((error) => {
+        throw error
       })
 
     promises.forEach((chunk) => {
@@ -46,7 +42,7 @@ export default async (req, res) => {
 
     res.status(200).json({ tracks })
   } catch (error) {
-    console.error("eeee", error)
-    res.status(400)
+    console.error("error getting track list", error)
+    res.status(400).json(error)
   }
 }
