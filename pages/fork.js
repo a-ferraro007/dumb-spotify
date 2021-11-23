@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { getCookie } from "../lib/getCookie"
 import { useAuth } from "../context/auth"
 import styles from "../styles/Home.module.css"
+import router from "next/router"
 
 const Home = () => {
   const [refreshToken, setRefreshToken] = useState({})
@@ -14,10 +15,17 @@ const Home = () => {
     const token = getCookie("refresh_token")
     if (token) {
       ;(async () => {
-        const newSession = await getNewAuthTokens(refreshToken)
-        setSession(newSession)
+        try {
+          const newSession = await getNewAuthTokens(refreshToken)
+          setSession(newSession)
+        } catch (error) {
+          console.log("error generating new auth token", error)
+          router.replace("/")
+        }
       })()
       setRefreshToken(token)
+    } else {
+      router.replace("/")
     }
   }, [])
 

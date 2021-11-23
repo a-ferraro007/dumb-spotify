@@ -9,6 +9,7 @@ import { getCookie } from "../lib/getCookie"
 
 export const AuthContext = createContext({
   session: null,
+  user: null,
   loading: false,
 })
 
