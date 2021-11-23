@@ -1,9 +1,11 @@
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { getAuthTokens } from '../lib/auth/authorize'
+import { useEffect } from "react"
+import { useRouter } from "next/router"
+import { useAuth } from "../context/auth"
+//import { getAuthTokens } from "../lib/auth/authorize"
 
 const callback = () => {
   const router = useRouter()
+  const { getAuthTokens } = useAuth()
   useEffect(() => {
     const { code } = router.query
     if (code) {
@@ -12,7 +14,7 @@ const callback = () => {
           await getAuthTokens(router, code)
         } catch (error) {
           console.error(error)
-          router.replace('/')
+          router.replace("/")
         }
       })()
     }

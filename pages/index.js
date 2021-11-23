@@ -3,13 +3,14 @@ import { useRouter } from "next/router"
 //import { supabase } from "../lib/supabase"
 //import Voronoi from '../components/Voronoi'
 import styles from "../styles/Home.module.css"
-import { authorizationCode, getAuthTokens } from "../lib/auth/authorize"
+//import { authorizationCode, getAuthTokens } from "../lib/auth/authorize"
 import { useAuth } from "../context/auth"
 import { useEffect } from "react"
 
 export default function Login() {
   console.log("tear")
   const router = useRouter()
+  const { authorizationCode } = useAuth()
   //const { session, loading } = useAuth()
 
   //useEffect(() => {

@@ -1,20 +1,14 @@
 import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
-import { getNewAuthTokens } from "../lib/auth/authorize"
 import { getCookie } from "../lib/getCookie"
 import { useAuth } from "../context/auth"
 import styles from "../styles/Home.module.css"
-//import { supabase } from "../lib/supabase"
 
 const Home = () => {
-  const router = useRouter()
-  //const { session, loading } = useAuth()
   const [refreshToken, setRefreshToken] = useState({})
   const [session, setSession] = useState({ access_token: null })
   const [userPlaylists, setUserPlaylists] = useState([])
   const [forkedPlaylists, setForkedPlaylists] = useState([])
-  const [showTracks, setShowTracks] = useState(true)
-  //const [userId, setUserID] = useState("")
+  const { user, getNewAuthTokens } = useAuth()
 
   useEffect(() => {
     const token = getCookie("refresh_token")
@@ -28,8 +22,7 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    console.log(session)
-    if (!session.access_token) return
+    if (!session.access_token || !user) return
     ;(async () => {
       const usrTrackObj = {}
       const deletedPlaylists = []
@@ -72,7 +65,7 @@ const Home = () => {
         await fetch(`api/supabase/deletePlaylists`, {
           method: "POST",
           body: JSON.stringify({
-            spotify_id: "aferraro1",
+            spotify_id: user.id,
             playlistIds: deletedPlaylists,
           }),
         })
@@ -80,7 +73,7 @@ const Home = () => {
         console.error(error)
       }
     })()
-  }, [session])
+  }, [session, user])
 
   const handleForkPlaylist = async (playlist) => {
     try {
@@ -103,12 +96,9 @@ const Home = () => {
   }
 
   const handleUpdatePlaylist = async (id, master_id) => {
-    console.log(id, master_id, session)
     try {
-      const updatePlaylistReq = await fetch(
-        `api/spotify/updateForkedPlaylist?access_token=${
-          session.access_token
-        }&id=${id}&master_id=${master_id}&spotify_id=${"aferraro1"}`
+      await fetch(
+        `api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${id}&master_id=${master_id}&spotify_id=${user.id}`
       )
     } catch (error) {
       console.error(error)
@@ -117,74 +107,36 @@ const Home = () => {
 
   return (
     <>
-      {showTracks ? (
-        <div className={styles.homeContainer}>
-          <ul>
-            {userPlaylists?.map((playlist, index) => {
-              return (
-                <li key={index}>
-                  <button onClick={() => handleForkPlaylist(playlist)}>
-                    {" "}
-                    {playlist.name}{" "}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-          <ul>
-            {forkedPlaylists?.map((fork, index) => {
-              return (
-                <li key={index}>
-                  <button
-                    onClick={() =>
-                      handleUpdatePlaylist(fork.id, fork.master_id)
-                    }
-                  >
-                    {" "}
-                    {fork.playlist.name}{" "}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      ) : (
-        <></>
-      )}
+      <div className={styles.homeContainer}>
+        <ul>
+          {userPlaylists?.map((playlist, index) => {
+            return (
+              <li key={index}>
+                <button onClick={() => handleForkPlaylist(playlist)}>
+                  {" "}
+                  {playlist.name}{" "}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+        <ul>
+          {forkedPlaylists?.map((fork, index) => {
+            return (
+              <li key={index}>
+                <button
+                  onClick={() => handleUpdatePlaylist(fork.id, fork.master_id)}
+                >
+                  {" "}
+                  {fork.playlist.name}{" "}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
     </>
   )
 }
 
 export default Home
-
-//const [currentTrackListing, setCurrentTrackListing] = useState([])
-//const [isCreating, setIsCreating] = useState(false)
-//const [showPattern, setShowPattern] = useState(false)
-//const [formedData, setFormedData] = useState()
-//const [analysisData, setAnalysisData] = useState()
-//const handleSelectTrack = async (id) => {
-//  setIsCreating(true)
-//  setShowTracks(false)
-//  try {
-//    const data = await getNewAuthTokens()
-//    console.log('accessToken', data)
-//    const req = await fetch(
-//      `api/getAudioAnalysis?access_token=${data.access_token}&id=${id}`
-//    )
-//    const featuresReq = await fetch(
-//      `api/getAudioFeatures?access_token=${data.access_token}&id=${id}`
-//    )
-//    const res = await req.json()
-//    const featuresRes = await featuresReq.json()
-//    setFormedData(featuresRes.formed)
-//    setAnalysisData(res.data)
-//    console.log(res)
-
-//    setTimeout(() => {
-//      setIsCreating(false)
-//      setShowPattern(true)
-//    }, 1000)
-//  } catch (error) {
-//    console.error(error)
-//  }
-//}
