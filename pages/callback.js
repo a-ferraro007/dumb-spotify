@@ -1,6 +1,8 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useAuth } from "../context/auth"
+import Loading from "../components/loading"
+import styles from "../styles/Callback.module.css"
 
 const callback = () => {
   const router = useRouter()
@@ -18,7 +20,12 @@ const callback = () => {
       })()
     }
   }, [router.query])
-  return <div> Getting Authentication Tokens... </div>
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.loading_text}>generating auth tokens </h1>
+      <Loading />
+    </div>
+  )
 }
 
 export default callback

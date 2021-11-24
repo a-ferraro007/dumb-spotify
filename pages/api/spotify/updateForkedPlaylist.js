@@ -1,9 +1,4 @@
-import {
-  getTracks,
-  getPlaylist,
-  addTracks,
-  updateFork,
-} from "../../../lib/spotify/utils"
+import { getTracks, getPlaylist, updateFork } from "../../../lib/spotify/utils"
 import { supabase } from "../../../lib/supabase/client"
 import { updateForkedPlaylist } from "../../../lib/supabase/utils"
 
