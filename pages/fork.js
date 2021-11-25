@@ -3,8 +3,10 @@ import { getCookie } from "../lib/getCookie"
 import { useAuth } from "../context/auth"
 import styles from "../styles/Fork.module.css"
 import router from "next/router"
+import PlaylistCard from "../components/PlaylistCard"
+import Layout from "../components/Layout"
 
-const Home = () => {
+const Fork = () => {
   const [refreshToken, setRefreshToken] = useState({})
   const [session, setSession] = useState({ access_token: null })
   const [userPlaylists, setUserPlaylists] = useState([])
@@ -39,6 +41,7 @@ const Home = () => {
           `api/spotify/getUserPlaylists?access_token=${session.access_token}`
         )
         const res = await req.json()
+        console.log(res.data.items[0])
         const tmp = res.data.items.map((item) => {
           usrTrackObj[item.id] = true
           return {
@@ -48,6 +51,8 @@ const Home = () => {
             trackTotal: item.tracks.total,
             reqCount: Math.round(item.tracks.total / 100 + 0.5),
             owner: item.owner,
+            image: item?.images[0]?.url,
+            description: item.description,
           }
         })
         setUserPlaylists([...tmp])
@@ -115,20 +120,22 @@ const Home = () => {
 
   return (
     <>
-      <div className={styles.homeContainer}>
-        <ul>
-          {userPlaylists?.map((playlist, index) => {
-            return (
-              <li key={index}>
-                <button onClick={() => handleForkPlaylist(playlist)}>
-                  {" "}
-                  {playlist.name}{" "}
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-        <ul>
+      <Layout>
+        <div className={styles.container}>
+          <div className={styles.playlist__grid}>
+            {userPlaylists?.map((playlist, index) => {
+              return (
+                //<li key={index}>
+                //  <button onClick={() => handleForkPlaylist(playlist)}>
+                //    {" "}
+                //    {playlist.name}{" "}
+                //  </button>
+                //</li>
+                <PlaylistCard key={index} playlist={playlist} />
+              )
+            })}
+
+            {/*<ul>
           {forkedPlaylists?.map((fork, index) => {
             return (
               <li key={index}>
@@ -141,10 +148,12 @@ const Home = () => {
               </li>
             )
           })}
-        </ul>
-      </div>
+        </ul>*/}
+          </div>
+        </div>
+      </Layout>
     </>
   )
 }
 
-export default Home
+export default Fork

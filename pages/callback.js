@@ -22,7 +22,7 @@ const callback = () => {
   }, [router.query])
   return (
     <div className={styles.container}>
-      <h1 className={styles.loading_text}>generating auth tokens </h1>
+      <h1 className={styles.loading_text}>generating auth tokens</h1>
       <Loading />
     </div>
   )
