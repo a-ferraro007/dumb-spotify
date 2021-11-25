@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useAuth } from "../context/auth"
-import Loading from "../components/svg/Loading"
+import Loading from "../components/SVG/Loading"
 import styles from "../styles/Callback.module.css"
 
 const callback = () => {
