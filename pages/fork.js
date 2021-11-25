@@ -8,11 +8,10 @@ import Layout from "../components/Layout"
 
 const Fork = () => {
   const [refreshToken, setRefreshToken] = useState({})
-  const [session, setSession] = useState({ access_token: null })
   const [userPlaylists, setUserPlaylists] = useState([])
   const [forkedPlaylists, setForkedPlaylists] = useState([])
   const [radioBtnState, setRadioBtnState] = useState("liked")
-  const { user, getNewAuthTokens } = useAuth()
+  const { user, getNewAuthTokens, session } = useAuth()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -20,8 +19,7 @@ const Fork = () => {
     if (token) {
       ;(async () => {
         try {
-          const newSession = await getNewAuthTokens(refreshToken)
-          setSession(newSession)
+          await getNewAuthTokens(refreshToken)
         } catch (error) {
           console.log("error generating new auth token", error)
           router.replace("/")
@@ -34,7 +32,7 @@ const Fork = () => {
   }, [])
 
   useEffect(() => {
-    if (!session.access_token || !user) return
+    if (!session || !user) return
     ;(async () => {
       const usrPlaylistObj = {}
       const deletedPlaylists = []
@@ -90,27 +88,7 @@ const Fork = () => {
         console.error(error)
       }
     })()
-  }, [session, user])
-
-  const handleForkPlaylist = async (playlist) => {
-    try {
-      const forkPlaylist = await fetch(`api/spotify/forkPlaylist`, {
-        method: "POST",
-        body: JSON.stringify({
-          access_token: session.access_token,
-          name: playlist.name,
-          reqCount: playlist.reqCount,
-          owner: playlist.owner.display_name,
-          master_playlist_id: playlist.playlistId,
-          total: playlist.trackTotal,
-        }),
-      })
-      const fork = await forkPlaylist.json()
-      console.log(fork)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  }, [session])
 
   const handleUpdatePlaylist = async (id, master_id) => {
     try {

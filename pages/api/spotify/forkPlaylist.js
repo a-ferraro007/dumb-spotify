@@ -2,8 +2,16 @@ import { createPlaylist, getTracks } from "../../../lib/spotify/utils"
 import { addForkToDB } from "../../../lib/supabase/utils"
 
 export default async (req, res) => {
-  const { access_token, name, reqCount, owner, master_playlist_id, total } =
-    JSON.parse(req.body)
+  const {
+    access_token,
+    name,
+    reqCount,
+    owner,
+    master_playlist_id,
+    total,
+    user,
+    image,
+  } = JSON.parse(req.body)
 
   try {
     const getTracksRes = await getTracks(
@@ -24,10 +32,11 @@ export default async (req, res) => {
       owner
     )
 
+    console.log("create", createPlaylistRes)
     const { data, error } = await addForkToDB(
       createPlaylistRes.id,
       master_playlist_id,
-      "aferraro1",
+      user,
       { tracks: trackUris },
       {
         name: createPlaylistRes.name,
@@ -36,6 +45,7 @@ export default async (req, res) => {
         trackTotal: createPlaylistRes.tracks.total,
         reqCount: Math.round(createPlaylistRes.tracks.total / 100 + 0.5),
         owner: createPlaylistRes.owner,
+        image,
       }
     )
     if (error) throw error

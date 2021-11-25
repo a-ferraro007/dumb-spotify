@@ -1,10 +1,31 @@
 import React from "react"
 import Image from "next/image"
+import { useAuth } from "../context/auth"
 import styles from "../styles/PlaylistCard.module.css"
 
 const PlaylistCard = ({ playlist }) => {
-  const handlePlaylistClick = () => {
-    console.log("click", playlist)
+  const { session, user } = useAuth()
+  const handlePlaylistClick = async () => {
+    console.log(playlist)
+    try {
+      const forkPlaylist = await fetch(`api/spotify/forkPlaylist`, {
+        method: "POST",
+        body: JSON.stringify({
+          access_token: session.access_token,
+          user: user.id,
+          name: playlist.name,
+          reqCount: playlist.reqCount,
+          owner: playlist.owner.display_name,
+          master_playlist_id: playlist.playlistId,
+          total: playlist.trackTotal,
+          image: playlist.image,
+        }),
+      })
+      const fork = await forkPlaylist.json()
+      console.log(fork)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

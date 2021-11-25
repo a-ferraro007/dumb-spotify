@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
           method: "POST",
           body: JSON.stringify({ id: user.id }),
         })
-
+        setSession({ access_token, refresh_token, expires_in })
         await router.replace("/fork")
       } else {
         throw new Error(
@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       document.cookie = `access_token=${access_token}; max-age=${expires_in}`
       const user = await getUser(access_token)
       setUser(user)
+      setSession({ access_token, refresh_token: refreshToken, expires_in })
       return {
         access_token,
         expires_in,
@@ -90,15 +91,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log("test auth", user)
-    //setLoading(true)
-    //setSession(supabase.auth.session())
-    //supabase.auth.onAuthStateChange((_event, session) => {
-    //  setLoading(true)
-    //  setSession(session)
-    //  setLoading(false)
-    //})
-    //setLoading(false)
+    console.log("cookies")
   }, [user])
   return (
     <AuthContext.Provider
