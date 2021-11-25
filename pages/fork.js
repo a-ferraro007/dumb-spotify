@@ -11,7 +11,9 @@ const Fork = () => {
   const [session, setSession] = useState({ access_token: null })
   const [userPlaylists, setUserPlaylists] = useState([])
   const [forkedPlaylists, setForkedPlaylists] = useState([])
+  const [radioBtnState, setRadioBtnState] = useState("liked")
   const { user, getNewAuthTokens } = useAuth()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const token = getCookie("refresh_token")
@@ -34,7 +36,7 @@ const Fork = () => {
   useEffect(() => {
     if (!session.access_token || !user) return
     ;(async () => {
-      const usrTrackObj = {}
+      const usrPlaylistObj = {}
       const deletedPlaylists = []
       try {
         const req = await fetch(
@@ -43,7 +45,7 @@ const Fork = () => {
         const res = await req.json()
         console.log(res.data.items[0])
         const tmp = res.data.items.map((item) => {
-          usrTrackObj[item.id] = true
+          usrPlaylistObj[item.id] = true
           return {
             name: item.name,
             playlistId: item.id,
@@ -58,12 +60,12 @@ const Fork = () => {
         setUserPlaylists([...tmp])
 
         const getForkedPlaylistsReq = await fetch(
-          `api/supabase/getForkedPlaylists?id=${"aferraro1"}`
+          `api/supabase/getForkedPlaylists?id=${user.id}`
         )
         const getForkedPlaylistsRes = await getForkedPlaylistsReq.json()
         const playlists = []
         getForkedPlaylistsRes.forEach((e) => {
-          if (usrTrackObj[e.playlist_id]) {
+          if (usrPlaylistObj[e.playlist_id]) {
             playlists.push({
               id: e.playlist_id,
               master_id: e.master_playlist_id,
@@ -82,6 +84,8 @@ const Fork = () => {
             playlistIds: deletedPlaylists,
           }),
         })
+
+        setLoading(false)
       } catch (error) {
         console.error(error)
       }
@@ -117,40 +121,59 @@ const Fork = () => {
       console.error(error)
     }
   }
-
   return (
     <>
       <Layout>
-        <div className={styles.container}>
-          <div className={styles.playlist__grid}>
-            {userPlaylists?.map((playlist, index) => {
-              return (
-                //<li key={index}>
-                //  <button onClick={() => handleForkPlaylist(playlist)}>
-                //    {" "}
-                //    {playlist.name}{" "}
-                //  </button>
-                //</li>
-                <PlaylistCard key={index} playlist={playlist} />
-              )
-            })}
+        {!loading ? (
+          <div className={styles.container}>
+            <div className={styles.btn__group}>
+              <span className={styles.btn__group_label}> playlists: </span>
+              <div>
+                <input
+                  type="radio"
+                  id="liked"
+                  name="playlist"
+                  value="liked"
+                  checked={radioBtnState === "liked"}
+                  onChange={(e) => setRadioBtnState(e.target.value)}
+                  className={styles.input}
+                />
+                <label className={styles.btn__group_option}>liked</label>
+              </div>
+              <div>
+                {" "}
+                <input
+                  type="radio"
+                  id="forked"
+                  name="playlist"
+                  value="forked"
+                  checked={radioBtnState === "forked"}
+                  onChange={(e) => setRadioBtnState(e.target.value)}
+                  className={styles.input}
+                />
+                <label className={styles.btn__group_option}>forked</label>
+              </div>
+            </div>
 
-            {/*<ul>
-          {forkedPlaylists?.map((fork, index) => {
-            return (
-              <li key={index}>
-                <button
-                  onClick={() => handleUpdatePlaylist(fork.id, fork.master_id)}
-                >
-                  {" "}
-                  {fork.playlist.name}{" "}
-                </button>
-              </li>
-            )
-          })}
-        </ul>*/}
+            {radioBtnState === "liked" ? (
+              <div className={styles.playlist__grid}>
+                {userPlaylists?.map((playlist, index) => {
+                  return <PlaylistCard key={index} playlist={playlist} />
+                })}
+              </div>
+            ) : (
+              <div className={styles.playlist__grid}>
+                {forkedPlaylists?.map((playlist, index) => {
+                  return (
+                    <PlaylistCard key={index} playlist={playlist.playlist} />
+                  )
+                })}
+              </div>
+            )}
           </div>
-        </div>
+        ) : (
+          <> </>
+        )}
       </Layout>
     </>
   )

@@ -1,8 +1,8 @@
 .card {
-  height: 225px;
+  min-height: 225px;
   width: 200px;
   background: #ffff;
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 0px 5px;
 }
 
@@ -11,6 +11,7 @@
   font-size: 14px;
   font-family: var(--primary-font);
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .card__description {
@@ -24,10 +25,30 @@
 }
 
 .card__bottom {
-  padding-top: 5px;
+  padding-top: 15px;
+  text-align: center;
 }
 
 .playlist__image {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.unstyled__btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.btn {
+  font-family: var(--primary-font);
+  font-weight: bold;
+  background-color: transparent;
+  /*var(--primary-text-green);*/
+  /*background: linear-gradient(0deg, #ffffff, #ffffff);*/
+  padding: 5px;
+  /*font-size: 12px;*/
+  /*text-align: center;*/
+  /*border-radius: 10px;*/
+  border: none;
+  cursor: pointer;
 }

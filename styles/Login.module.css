@@ -12,7 +12,6 @@
 
 .heading {
   font-size: 64px;
-  line-height: 1.35;
   font-family: var(--primary-font);
   color: var(--primary-text-green);
   text-align: center;
@@ -22,7 +21,8 @@
   font-size: 16px;
   font-family: var(--primary-font);
   color: #ffff;
-  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
   text-align: center;
   line-height: 1.5;
 }
@@ -31,10 +31,10 @@
   font-family: var(--primary-font);
   font-weight: bold;
   background: linear-gradient(0deg, #ffffff, #ffffff);
-  padding: 10px 10px;
+  padding: 5px 10px;
   font-size: 16px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
 }
