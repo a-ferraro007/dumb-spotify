@@ -1,3 +1,3 @@
 # Musical Guacamole
 
-a web app to create forks of your favorite public Spotify playlists and keep them in sync with the original playlist
+musical gaucamole lets you make forks of your favorite public spotify playlists so you can make additions and keep it synced with the original.
