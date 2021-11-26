@@ -29,7 +29,8 @@ export default async (req, res) => {
       name,
       trackUris,
       reqCount,
-      owner
+      owner,
+      image
     )
 
     console.log("create", createPlaylistRes)

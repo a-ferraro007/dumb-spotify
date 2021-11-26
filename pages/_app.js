@@ -1,11 +1,14 @@
 import "../styles/globals.css"
 import { AuthProvider } from "../context/auth"
+import { PlaylistProvider } from "../context/playlist"
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
       <AuthProvider>
-        <Component {...pageProps} />
+        <PlaylistProvider>
+          <Component {...pageProps} />
+        </PlaylistProvider>
       </AuthProvider>
     </>
   )

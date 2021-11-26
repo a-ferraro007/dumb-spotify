@@ -34,34 +34,41 @@ const Fork = () => {
   useEffect(() => {
     if (!session || !user) return
     ;(async () => {
-      const usrPlaylistObj = {}
       const deletedPlaylists = []
+      const playlists = []
+      const usrPlaylistObj = {}
+      const forkPlaylistObj = {}
       try {
-        const req = await fetch(
-          `api/spotify/getUserPlaylists?access_token=${session.access_token}`
-        )
-        const res = await req.json()
-        console.log(res.data.items[0])
-        const tmp = res.data.items.map((item) => {
-          usrPlaylistObj[item.id] = true
-          return {
-            name: item.name,
-            playlistId: item.id,
-            trackCount: item.tracks,
-            trackTotal: item.tracks.total,
-            reqCount: Math.round(item.tracks.total / 100 + 0.5),
-            owner: item.owner,
-            image: item?.images[0]?.url,
-            description: item.description,
-          }
-        })
-        setUserPlaylists([...tmp])
-
         const getForkedPlaylistsReq = await fetch(
           `api/supabase/getForkedPlaylists?id=${user.id}`
         )
         const getForkedPlaylistsRes = await getForkedPlaylistsReq.json()
-        const playlists = []
+        getForkedPlaylistsRes.forEach((fork) => {
+          forkPlaylistObj[fork.playlist_id] = fork.playlist_id
+        })
+
+        const req = await fetch(
+          `api/spotify/getUserPlaylists?access_token=${session.access_token}`
+        )
+        const res = await req.json()
+        const usrPlaylists = res.data.items.reduce((result, playlist) => {
+          usrPlaylistObj[playlist.id] = playlist.id
+          if (!forkPlaylistObj[playlist.id]) {
+            result.push({
+              name: playlist.name,
+              playlistId: playlist.id,
+              trackCount: playlist.tracks,
+              trackTotal: playlist.tracks.total,
+              reqCount: Math.round(playlist.tracks.total / 100 + 0.5),
+              owner: playlist.owner,
+              image: playlist?.images[0]?.url,
+              description: playlist.description,
+            })
+          }
+          return result
+        }, [])
+        setUserPlaylists(usrPlaylists)
+
         getForkedPlaylistsRes.forEach((e) => {
           if (usrPlaylistObj[e.playlist_id]) {
             playlists.push({
@@ -90,70 +97,73 @@ const Fork = () => {
     })()
   }, [session])
 
-  const handleUpdatePlaylist = async (id, master_id) => {
-    try {
-      await fetch(
-        `api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${id}&master_id=${master_id}&spotify_id=${user.id}`
-      )
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  ////const handleUpdatePlaylist = async (id, master_id) => {
+  //  try {
+  //    await fetch(
+  //      `api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${id}&master_id=${master_id}&spotify_id=${user.id}`
+  //    )
+  //  } catch (error) {
+  //    console.error(error)
+  //  }
+  ////}
   return (
-    <>
-      <Layout>
-        {!loading ? (
-          <div className={styles.container}>
-            <div className={styles.btn__group}>
-              <span className={styles.btn__group_label}> playlists: </span>
-              <div>
-                <input
-                  type="radio"
-                  id="liked"
-                  name="playlist"
-                  value="liked"
-                  checked={radioBtnState === "liked"}
-                  onChange={(e) => setRadioBtnState(e.target.value)}
-                  className={styles.input}
-                />
-                <label className={styles.btn__group_option}>liked</label>
-              </div>
-              <div>
-                {" "}
-                <input
-                  type="radio"
-                  id="forked"
-                  name="playlist"
-                  value="forked"
-                  checked={radioBtnState === "forked"}
-                  onChange={(e) => setRadioBtnState(e.target.value)}
-                  className={styles.input}
-                />
-                <label className={styles.btn__group_option}>forked</label>
-              </div>
+    <Layout>
+      {!loading ? (
+        <div className={styles.container}>
+          <div className={styles.btn__group}>
+            <span className={styles.btn__group_label}> playlists: </span>
+            <div>
+              <input
+                type="radio"
+                id="liked"
+                name="playlist"
+                value="liked"
+                checked={radioBtnState === "liked"}
+                onChange={(e) => setRadioBtnState(e.target.value)}
+                className={styles.input}
+              />
+              <label className={styles.btn__group_option}>liked</label>
             </div>
-
-            {radioBtnState === "liked" ? (
-              <div className={styles.playlist__grid}>
-                {userPlaylists?.map((playlist, index) => {
-                  return <PlaylistCard key={index} playlist={playlist} />
-                })}
-              </div>
-            ) : (
-              <div className={styles.playlist__grid}>
-                {forkedPlaylists?.map((playlist, index) => {
-                  return (
-                    <PlaylistCard key={index} playlist={playlist.playlist} />
-                  )
-                })}
-              </div>
-            )}
+            <div>
+              {" "}
+              <input
+                type="radio"
+                id="forked"
+                name="playlist"
+                value="forked"
+                checked={radioBtnState === "forked"}
+                onChange={(e) => setRadioBtnState(e.target.value)}
+                className={styles.input}
+              />
+              <label className={styles.btn__group_option}>forked</label>
+            </div>
           </div>
-        ) : (
-          <> </>
-        )}
-      </Layout>
-    </>
+
+          {radioBtnState === "liked" ? (
+            <div className={styles.playlist__grid}>
+              {userPlaylists?.map((playlist, index) => {
+                return <PlaylistCard key={index} playlist={playlist} />
+              })}
+            </div>
+          ) : (
+            <div className={styles.playlist__grid}>
+              {forkedPlaylists?.map((playlist, index) => {
+                return (
+                  <PlaylistCard
+                    key={index}
+                    playlist={playlist.playlist}
+                    master={playlist.master_id}
+                    fork={true}
+                  />
+                )
+              })}
+            </div>
+          )}
+        </div>
+      ) : (
+        <> </>
+      )}
+    </Layout>
   )
 }
 
