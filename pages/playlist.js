@@ -66,7 +66,7 @@ const playlist = () => {
             </p>
             <span className={styles.playlist__subscript}>
               {" "}
-              {playlist.owner.display_name}
+              {playlist.owner?.display_name}
             </span>
             <span className={styles.playlist__subscript}>
               {" "}
