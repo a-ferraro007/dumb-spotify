@@ -1,0 +1,22 @@
+.tracklist__grid {
+  color: white;
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: 16px 0.75fr 0.25fr;
+  height: 48px;
+}
+
+.tracklist__cell {
+  display: flex;
+  align-items: center;
+}
+
+.tracklist__container {
+  /*width: 50%;*/
+}
+
+.track__image {
+  height: 36px;
+  width: 36px;
+  margin-right: 15px;
+}

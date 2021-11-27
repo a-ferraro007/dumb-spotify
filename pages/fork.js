@@ -97,15 +97,6 @@ const Fork = () => {
     })()
   }, [session])
 
-  ////const handleUpdatePlaylist = async (id, master_id) => {
-  //  try {
-  //    await fetch(
-  //      `api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${id}&master_id=${master_id}&spotify_id=${user.id}`
-  //    )
-  //  } catch (error) {
-  //    console.error(error)
-  //  }
-  ////}
   return (
     <Layout>
       {!loading ? (
@@ -122,7 +113,9 @@ const Fork = () => {
                 onChange={(e) => setRadioBtnState(e.target.value)}
                 className={styles.input}
               />
-              <label className={styles.btn__group_option}>liked</label>
+              <label htmlFor="liked" className={styles.btn__group_option}>
+                liked
+              </label>
             </div>
             <div>
               {" "}
@@ -135,7 +128,9 @@ const Fork = () => {
                 onChange={(e) => setRadioBtnState(e.target.value)}
                 className={styles.input}
               />
-              <label className={styles.btn__group_option}>forked</label>
+              <label htmlFor="forked" className={styles.btn__group_option}>
+                forked
+              </label>
             </div>
           </div>
 
