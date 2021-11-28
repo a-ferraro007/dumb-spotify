@@ -26,8 +26,6 @@ const TrackList = ({ tracks }) => {
                   height={36}
                   layout="responsive"
                   quality="100"
-                  placeholder="blur"
-                  blurDataURL="/placeholder.png"
                   className={styles.playlist__image}
                 />{" "}
               </div>

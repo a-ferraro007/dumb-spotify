@@ -1,5 +1,6 @@
 :root {
-  --main-bg-color: #232931;
+  --md-black: #232931;
+  --main-bg-color: #111415;
   --primary-font: "Ubuntu", sans-serif;
   --primary-text-green: #1db954;
 }

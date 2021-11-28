@@ -4,15 +4,10 @@ export const PlaylistContext = createContext({})
 
 export const PlaylistProvider = ({ children }) => {
   const [playlist, setPlaylist] = useState({})
-  const [isFork, setIsFork] = useState(false)
   const [masterId, setMasterId] = useState("")
 
   const handleSetPlaylist = (playlist) => {
     setPlaylist(playlist)
-  }
-
-  const handleSetIsFork = (isFork) => {
-    setIsFork(isFork)
   }
 
   const handleSetMasterId = (masterId) => {
@@ -23,9 +18,7 @@ export const PlaylistProvider = ({ children }) => {
     <PlaylistContext.Provider
       value={{
         playlist,
-        isFork,
         masterId,
-        handleSetIsFork,
         handleSetMasterId,
         handleSetPlaylist,
       }}

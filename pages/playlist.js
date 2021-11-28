@@ -12,6 +12,7 @@ const playlist = () => {
 
   useEffect(() => {
     ;(async () => {
+      console.log(playlist)
       const tracks = await fetch(
         `api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
       )
@@ -22,6 +23,14 @@ const playlist = () => {
       setTracks([...trackItems])
     })()
   }, [])
+
+  const handleOnClick = async () => {
+    if (playlist.isFork) {
+      await handleUpdateForkedPlaylist()
+    } else {
+      await handleCreateFork()
+    }
+  }
 
   const handleCreateFork = async () => {
     try {
@@ -48,7 +57,7 @@ const playlist = () => {
   const handleUpdateForkedPlaylist = async () => {
     try {
       await fetch(
-        `api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${playlist.playlistId}&master_id=${master}&spotify_id=${user.id}`
+        `api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${playlist.playlistId}&master_id=${masterId}&spotify_id=${user.id}`
       )
     } catch (error) {
       console.error(error)
@@ -64,14 +73,23 @@ const playlist = () => {
             <p className={styles.playlist__description}>
               {playlist.description}
             </p>
-            <span className={styles.playlist__subscript}>
-              {" "}
-              {playlist.owner?.display_name}
-            </span>
-            <span className={styles.playlist__subscript}>
-              {" "}
-              {playlist.trackTotal} songs
-            </span>
+            <div className={styles.playlist__btnBar}>
+              <div className={styles.playlist__subscriptContainer}>
+                <span className={styles.playlist__subscript}>
+                  {" "}
+                  {playlist.owner?.display_name}
+                </span>
+                <span className={styles.playlist__subscript}>
+                  {" "}
+                  {playlist.trackTotal} songs
+                </span>
+              </div>
+
+              <button onClick={handleOnClick} className={styles.btn}>
+                {playlist.isFork ? "update" : "fork"}
+              </button>
+            </div>
+
             <div className={styles.playlist__tracksContainer}>
               {tracks.length ? <TrackList tracks={tracks} /> : <> </>}
             </div>

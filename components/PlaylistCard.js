@@ -5,17 +5,19 @@ import { usePlaylist } from "../context/playlist"
 
 const PlaylistCard = ({ playlist, fork, master }) => {
   const router = useRouter()
-  const { handleSetPlaylist, handleSetIsFork, handleSetMasterId } =
-    usePlaylist()
+  const { handleSetPlaylist, handleSetMasterId } = usePlaylist()
 
   return (
     <button
       onClick={() => {
         console.log("card click", playlist)
-        handleSetPlaylist(playlist)
+
         if (fork) {
-          handleSetIsFork(fork)
+          playlist.isFork = true
+          handleSetPlaylist(playlist)
           handleSetMasterId(master)
+        } else {
+          handleSetPlaylist(playlist)
         }
         router.push("/playlist")
       }}
@@ -24,10 +26,10 @@ const PlaylistCard = ({ playlist, fork, master }) => {
       <div className={styles.card}>
         <div className={styles.card__top}>
           <Image
-            src={playlist.image ? playlist.image : "/placeholder.png"}
-            width={200}
+            src={playlist.image}
+            width={150}
             height={150}
-            layout="responsive"
+            layout="fixed"
             quality="100"
             placeholder="blur"
             blurDataURL="/placeholder.png"

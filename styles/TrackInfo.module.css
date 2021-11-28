@@ -3,20 +3,25 @@
   display: grid;
   grid-gap: 16px;
   grid-template-columns: 16px 0.75fr 0.25fr;
-  height: 48px;
+  height: 68px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tracklist__cell {
   display: flex;
   align-items: center;
+  font-family: var(--primary-font);
 }
 
 .tracklist__container {
   /*width: 50%;*/
+  background: var(--md-black);
+  border-radius: 15px;
+  padding: 15px 35px;
 }
 
 .track__image {
-  height: 36px;
-  width: 36px;
+  height: 46px;
+  width: 46px;
   margin-right: 15px;
 }
