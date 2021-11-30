@@ -12,7 +12,8 @@ export default function index() {
           <div className={styles.container}>
             <h1 className={styles.heading}> dumb spotify</h1>
             <p className={styles.subheading}>
-              it's like regular spotify, but worse.
+              it's like regular spotify, <br className={styles.break}></br> but
+              worse.
             </p>
             <div className={styles.btn}> coming soon... </div>
           </div>
