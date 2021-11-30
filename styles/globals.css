@@ -1,6 +1,8 @@
 :root {
-  --md-black: #232931;
-  --main-bg-color: #111415;
+  --md-black: #181818;
+  /*#232931;*/
+  --main-bg-color: #121212;
+  /*#111415;*/
   --primary-font: "Ubuntu", sans-serif;
   --primary-text-green: #1db954;
 }
@@ -10,6 +12,7 @@ body {
   padding: 0;
   margin: 0;
   background: var(--main-bg-color);
+  overflow-y: hidden;
 }
 
 a {

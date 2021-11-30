@@ -19,7 +19,7 @@ const Fork = () => {
     if (token) {
       ;(async () => {
         try {
-          await getNewAuthTokens(refreshToken)
+          await getNewAuthTokens(token)
         } catch (error) {
           console.log("error generating new auth token", error)
           router.replace("/")
@@ -101,37 +101,35 @@ const Fork = () => {
     <Layout>
       {!loading ? (
         <div className={styles.container}>
-          <div className={styles.btn__group}>
-            <span className={styles.btn__group_label}> playlists: </span>
-            <div>
-              <input
-                type="radio"
-                id="liked"
-                name="playlist"
-                value="liked"
-                checked={radioBtnState === "liked"}
-                onChange={(e) => setRadioBtnState(e.target.value)}
-                className={styles.input}
-              />
-              <label htmlFor="liked" className={styles.btn__group_option}>
-                liked
-              </label>
-            </div>
-            <div>
-              {" "}
-              <input
-                type="radio"
-                id="forked"
-                name="playlist"
-                value="forked"
-                checked={radioBtnState === "forked"}
-                onChange={(e) => setRadioBtnState(e.target.value)}
-                className={styles.input}
-              />
-              <label htmlFor="forked" className={styles.btn__group_option}>
-                forked
-              </label>
-            </div>
+          <span className={styles.btn__group_label}> playlists: </span>
+          <div>
+            <input
+              type="radio"
+              id="liked"
+              name="playlist"
+              value="liked"
+              checked={radioBtnState === "liked"}
+              onChange={(e) => setRadioBtnState(e.target.value)}
+              className={styles.input}
+            />
+            <label htmlFor="liked" className={styles.btn__group_option}>
+              liked
+            </label>
+          </div>
+          <div>
+            {" "}
+            <input
+              type="radio"
+              id="forked"
+              name="playlist"
+              value="forked"
+              checked={radioBtnState === "forked"}
+              onChange={(e) => setRadioBtnState(e.target.value)}
+              className={styles.input}
+            />
+            <label htmlFor="forked" className={styles.btn__group_option}>
+              forked
+            </label>
           </div>
 
           {radioBtnState === "liked" ? (
@@ -163,3 +161,37 @@ const Fork = () => {
 }
 
 export default Fork
+{
+  /*<div className={styles.btn__group}>
+<span className={styles.btn__group_label}> playlists: </span>
+<div>
+  <input
+    type="radio"
+    id="liked"
+    name="playlist"
+    value="liked"
+    checked={radioBtnState === "liked"}
+    onChange={(e) => setRadioBtnState(e.target.value)}
+    className={styles.input}
+  />
+  <label htmlFor="liked" className={styles.btn__group_option}>
+    liked
+  </label>
+</div>
+<div>
+  {" "}
+  <input
+    type="radio"
+    id="forked"
+    name="playlist"
+    value="forked"
+    checked={radioBtnState === "forked"}
+    onChange={(e) => setRadioBtnState(e.target.value)}
+    className={styles.input}
+  />
+  <label htmlFor="forked" className={styles.btn__group_option}>
+    forked
+  </label>
+</div>
+</div>*/
+}

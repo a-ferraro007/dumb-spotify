@@ -5,9 +5,21 @@ const TrackList = ({ tracks }) => {
   return (
     <div className={styles.tracklist__container}>
       <div className={styles.tracklist__grid}>
-        <span className={styles.tracklist__cell}>#</span>
-        <span className={styles.tracklist__cell}>Title</span>
-        <span className={styles.tracklist__cell}>Artist</span>
+        <span
+          className={`${styles.tracklist__cell} ${styles.tracklist__cellHeader}`}
+        >
+          #
+        </span>
+        <span
+          className={`${styles.tracklist__cell} ${styles.tracklist__cellHeader}`}
+        >
+          Title
+        </span>
+        <span
+          className={`${styles.tracklist__cell} ${styles.tracklist__cellHeader}`}
+        >
+          Artist
+        </span>
       </div>
 
       {tracks.map((track, index) => {

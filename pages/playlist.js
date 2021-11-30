@@ -4,14 +4,35 @@ import Layout from "../components/Layout"
 import { useAuth } from "../context/auth"
 import { usePlaylist } from "../context/playlist"
 import styles from ".././styles/Playlist.module.css"
+import Image from "next/image"
+import { getCookie } from "../lib/getCookie"
+import router from "next/router"
 
 const playlist = () => {
   const { playlist, isFork, masterId } = usePlaylist()
   const [tracks, setTracks] = useState([])
-  const { session, user } = useAuth()
+  const { session, user, getNewAuthTokens } = useAuth()
+
+  useEffect(() => {
+    const token = getCookie("refresh_token")
+    if (token) {
+      ;(async () => {
+        try {
+          await getNewAuthTokens(token)
+        } catch (error) {
+          console.log("error generating new auth token", error)
+          router.replace("/")
+        }
+      })()
+      //setRefreshToken(token)
+    } else {
+      router.replace("/")
+    }
+  }, [])
 
   useEffect(() => {
     ;(async () => {
+      if (!session || !user) return
       console.log(playlist)
       const tracks = await fetch(
         `api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
@@ -22,7 +43,7 @@ const playlist = () => {
       })
       setTracks([...trackItems])
     })()
-  }, [])
+  }, [session])
 
   const handleOnClick = async () => {
     if (playlist.isFork) {
@@ -69,25 +90,42 @@ const playlist = () => {
       <Layout>
         {playlist ? (
           <div className={styles.playlist__container}>
-            <h1 className={styles.playlist__heading}> {playlist.name} </h1>
-            <p className={styles.playlist__description}>
-              {playlist.description}
-            </p>
-            <div className={styles.playlist__btnBar}>
-              <div className={styles.playlist__subscriptContainer}>
-                <span className={styles.playlist__subscript}>
-                  {" "}
-                  {playlist.owner?.display_name}
-                </span>
-                <span className={styles.playlist__subscript}>
-                  {" "}
-                  {playlist.trackTotal} songs
-                </span>
+            <div className={styles.playlist__headerContainer}>
+              {/**/}
+              <div className={styles.playlist__imageContainer}>
+                <Image
+                  src={playlist.image}
+                  width="250"
+                  height="250"
+                  layout="fixed"
+                  className={styles.playlist__image}
+                />
               </div>
+              <div>
+                <span className={styles.playlist__subscript}>
+                  {playlist.isFork ? "FORK" : "LIKED"}
+                </span>
+                <h1 className={styles.playlist__heading}> {playlist.name} </h1>
+                <p className={styles.playlist__description}>
+                  {playlist.description}
+                </p>
+                <div className={styles.playlist__btnBar}>
+                  <div className={styles.playlist__subscriptContainer}>
+                    <span className={styles.playlist__subscript}>
+                      {" "}
+                      {playlist.owner?.display_name}
+                    </span>
+                    <span className={styles.playlist__subscript}>
+                      {" "}
+                      {playlist.trackTotal} songs
+                    </span>
+                  </div>
 
-              <button onClick={handleOnClick} className={styles.btn}>
-                {playlist.isFork ? "update" : "fork"}
-              </button>
+                  <button onClick={handleOnClick} className={styles.btn}>
+                    {playlist.isFork ? "update" : "fork"}
+                  </button>
+                </div>{" "}
+              </div>
             </div>
 
             <div className={styles.playlist__tracksContainer}>

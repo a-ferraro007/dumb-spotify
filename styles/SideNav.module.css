@@ -1,0 +1,8 @@
+.sideNav__container {
+  grid-area: side-nav;
+  height: 100vh;
+  width: 240px;
+  /*border: 1px solid wheat;*/
+  background-color: #000;
+  /*#121212;*/
+}
