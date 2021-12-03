@@ -2,6 +2,7 @@ import { useRouter } from "next/router"
 import styles from "../styles/Login.module.css"
 import { useAuth } from "../context/auth"
 import Layout from "../components/Layout"
+import SpotifyIntro from "../components/SVG/SpotifyIntro"
 
 export default function index() {
   return (
@@ -10,7 +11,8 @@ export default function index() {
       <div className={styles.container}>
         <div className={styles["o-container"]}>
           <div className={styles.container}>
-            <h1 className={styles.heading}> dumb spotify</h1>
+            {/*<h1 className={styles.heading}> dumb spotify</h1>*/}
+            <SpotifyIntro />
             <p className={styles.subheading}>
               it's like regular spotify, <br className={styles.break}></br> but
               worse.
