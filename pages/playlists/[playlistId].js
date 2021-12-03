@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
-import TrackList from "../components/TrackList"
-import Layout from "../components/Layout"
-import { useAuth } from "../context/auth"
-import { usePlaylist } from "../context/playlist"
-import styles from ".././styles/Playlist.module.css"
+import TrackList from "../../components/TrackList"
+import Layout from "../../components/Layout"
+import { useAuth } from "../../context/auth"
+import { usePlaylist } from "../../context/playlist"
+import styles from "../.././styles/Playlist.module.css"
 import Image from "next/image"
-import { getCookie } from "../lib/getCookie"
-import router from "next/router"
 
-const playlist = () => {
+import { getCookie } from "../../lib/getCookie"
+import router, { useRouter } from "next/router"
+
+const playlists = () => {
   const { playlist, isFork, masterId } = usePlaylist()
   const [tracks, setTracks] = useState([])
   const { session, user, getNewAuthTokens } = useAuth()
@@ -35,7 +36,7 @@ const playlist = () => {
       if (!session || !user) return
       console.log(playlist)
       const tracks = await fetch(
-        `api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
+        `/api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
       )
       const tracksRes = await tracks.json()
       const trackItems = tracksRes.tracks.map((item) => {
@@ -55,7 +56,7 @@ const playlist = () => {
 
   const handleCreateFork = async () => {
     try {
-      const forkPlaylist = await fetch(`api/spotify/forkPlaylist`, {
+      const forkPlaylist = await fetch(`/api/spotify/forkPlaylist`, {
         method: "POST",
         body: JSON.stringify({
           access_token: session.access_token,
@@ -78,7 +79,7 @@ const playlist = () => {
   const handleUpdateForkedPlaylist = async () => {
     try {
       await fetch(
-        `api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${playlist.playlistId}&master_id=${masterId}&spotify_id=${user.id}`
+        `/api/spotify/updateForkedPlaylist?access_token=${session.access_token}&id=${playlist.playlistId}&master_id=${masterId}&spotify_id=${user.id}`
       )
     } catch (error) {
       console.error(error)
@@ -91,7 +92,6 @@ const playlist = () => {
         {playlist ? (
           <div className={styles.playlist__container}>
             <div className={styles.playlist__headerContainer}>
-              {/**/}
               <div className={styles.playlist__imageContainer}>
                 <Image
                   src={playlist.image}
@@ -124,9 +124,16 @@ const playlist = () => {
                     </span>
                   </div>
 
-                  <button onClick={handleOnClick} className={styles.btn}>
-                    {playlist.isFork ? "update" : "fork"}
-                  </button>
+                  {playlist.isFork ? (
+                    <button onClick={handleOnClick} className={styles.btn}>
+                      {/*{playlist.isFork ? "update" : "create a fork"}*/}
+                      update
+                    </button>
+                  ) : (
+                    <button onClick={handleOnClick} className={styles.btn}>
+                      create a fork
+                    </button>
+                  )}
                 </div>{" "}
               </div>
             </div>
@@ -143,4 +150,4 @@ const playlist = () => {
   )
 }
 
-export default playlist
+export default playlists

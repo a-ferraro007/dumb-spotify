@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { getCookie } from "../lib/getCookie"
 import { useAuth } from "../context/auth"
+import { usePlaylist } from "../context/playlist"
 import styles from "../styles/Fork.module.css"
 import router from "next/router"
 import PlaylistCard from "../components/PlaylistCard"
@@ -10,11 +11,13 @@ const Fork = () => {
   const [refreshToken, setRefreshToken] = useState({})
   const [userPlaylists, setUserPlaylists] = useState([])
   const [forkedPlaylists, setForkedPlaylists] = useState([])
-  const [radioBtnState, setRadioBtnState] = useState("liked")
+  //const [radioBtnState, setRadioBtnState] = useState("liked")
   const { user, getNewAuthTokens, session } = useAuth()
   const [loading, setLoading] = useState(true)
+  const { radioBtnState } = usePlaylist()
 
   useEffect(() => {
+    console.log("rad", radioBtnState)
     const token = getCookie("refresh_token")
     if (token) {
       ;(async () => {
@@ -98,40 +101,10 @@ const Fork = () => {
   }, [session])
 
   return (
-    <Layout>
+    <Layout props={radioBtnState}>
       {!loading ? (
-        <div className={styles.container}>
-          <span className={styles.btn__group_label}> playlists: </span>
-          <div>
-            <input
-              type="radio"
-              id="liked"
-              name="playlist"
-              value="liked"
-              checked={radioBtnState === "liked"}
-              onChange={(e) => setRadioBtnState(e.target.value)}
-              className={styles.input}
-            />
-            <label htmlFor="liked" className={styles.btn__group_option}>
-              liked
-            </label>
-          </div>
-          <div>
-            {" "}
-            <input
-              type="radio"
-              id="forked"
-              name="playlist"
-              value="forked"
-              checked={radioBtnState === "forked"}
-              onChange={(e) => setRadioBtnState(e.target.value)}
-              className={styles.input}
-            />
-            <label htmlFor="forked" className={styles.btn__group_option}>
-              forked
-            </label>
-          </div>
-
+        //<div className={styles.container}>
+        <>
           {radioBtnState === "liked" ? (
             <div className={styles.playlist__grid}>
               {userPlaylists?.map((playlist, index) => {
@@ -152,7 +125,7 @@ const Fork = () => {
               })}
             </div>
           )}
-        </div>
+        </>
       ) : (
         <> </>
       )}

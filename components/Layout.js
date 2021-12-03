@@ -3,7 +3,7 @@ import styles from "../styles/Layout.module.css"
 import Footer from "./Footer"
 import SideNav from "./SideNav"
 
-const Layout = ({ children }) => {
+const Layout = ({ children, props }) => {
   return (
     <>
       {/*<Head>

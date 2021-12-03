@@ -1,6 +1,6 @@
 .container {
-  display: flex;
-  justify-content: center;
+  /*display: flex;
+  justify-content: center;*/
   /*margin-bottom: 75px;*/
   /*height: 100%;*/
 }
@@ -37,7 +37,8 @@
 
 .playlist__grid {
   display: grid;
-  grid-template-columns: repeat(4, 0.1fr);
-  grid-template-rows: auto;
-  gap: 35px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 25px;
+  width: 90%;
+  margin: 50px auto;
 }

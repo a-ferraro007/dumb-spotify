@@ -5,6 +5,7 @@ export const PlaylistContext = createContext({})
 export const PlaylistProvider = ({ children }) => {
   const [playlist, setPlaylist] = useState({})
   const [masterId, setMasterId] = useState("")
+  const [radioBtnState, setRadioBtnState] = useState("liked")
 
   const handleSetPlaylist = (playlist) => {
     setPlaylist(playlist)
@@ -14,13 +15,19 @@ export const PlaylistProvider = ({ children }) => {
     setMasterId(masterId)
   }
 
+  const handleSetRadioBtn = (radioBtnState) => {
+    setRadioBtnState(radioBtnState)
+  }
+
   return (
     <PlaylistContext.Provider
       value={{
         playlist,
         masterId,
+        radioBtnState,
         handleSetMasterId,
         handleSetPlaylist,
+        handleSetRadioBtn,
       }}
     >
       {" "}

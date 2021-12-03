@@ -19,14 +19,14 @@ const PlaylistCard = ({ playlist, fork, master }) => {
         } else {
           handleSetPlaylist(playlist)
         }
-        router.push("/playlist")
+        router.push(`/playlists/${playlist.playlistId}`)
       }}
       className={styles.unstyled__btn}
     >
       <div className={styles.card}>
         <div className={styles.card__top}>
           <Image
-            src={playlist.image}
+            src={playlist.image ? playlist.image : "/placeholder.png"}
             width={150}
             height={150}
             layout="fixed"

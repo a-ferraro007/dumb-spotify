@@ -1,9 +1,13 @@
 .tracklist__grid {
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: 16px 0.75fr 0.25fr;
+  grid-template-columns: 0.01fr 0.75fr 0.24fr;
   height: 68px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tracklist__grid:last-child {
+  border: none;
 }
 
 .tracklist__cell {
