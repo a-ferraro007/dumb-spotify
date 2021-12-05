@@ -7,15 +7,24 @@
   /*#121212;*/
 }
 
-.sideNav__contentContainer {
-  height: 100%;
+.sideNav__liContent {
+  padding: 0px 8px;
+  /*height: 100%;
   width: 100%;
-  padding: 0px 15px;
+  padding: 0px 25px;*/
   /*border: 1px solid white;*/
 }
 
+.sideNav__li {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
 .sideNav__logoContainer {
-  margin-top: 25px;
+  margin-top: 24px;
+  margin-bottom: 18px;
+  padding: 0px 24px;
 }
 
 .sideNav__logoText {

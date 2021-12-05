@@ -51,7 +51,7 @@ export default async (req, res) => {
     )
     if (error) throw error
 
-    res.status(200).json(true)
+    res.status(200).json(data)
   } catch (error) {
     console.error("error forking playlist", error)
     res.status(400).json(error)

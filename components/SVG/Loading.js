@@ -1,8 +1,8 @@
-function Loading() {
+function Loading({ width, height }) {
   return (
     <svg
-      width="100"
-      height="100"
+      width={width ?? 100}
+      height={height ?? 100}
       display="block"
       preserveAspectRatio="xMidYMid"
       viewBox="0 0 100 100"

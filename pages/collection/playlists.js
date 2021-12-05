@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import { getCookie } from "../lib/getCookie"
-import { useAuth } from "../context/auth"
-import { usePlaylist } from "../context/playlist"
-import styles from "../styles/Fork.module.css"
+import { getCookie } from "../../lib/getCookie"
+import { useAuth } from "../../context/auth"
+import { usePlaylist } from "../../context/playlist"
+import styles from "../../styles/Fork.module.css"
 import router from "next/router"
-import PlaylistCard from "../components/PlaylistCard"
-import Layout from "../components/Layout"
+import PlaylistCard from "../../components/PlaylistCard"
+import Layout from "../../components/Layout"
 
 const Fork = () => {
   const [refreshToken, setRefreshToken] = useState({})
@@ -43,7 +43,7 @@ const Fork = () => {
       const forkPlaylistObj = {}
       try {
         const getForkedPlaylistsReq = await fetch(
-          `api/supabase/getForkedPlaylists?id=${user.id}`
+          `/api/supabase/getForkedPlaylists?id=${user.id}`
         )
         const getForkedPlaylistsRes = await getForkedPlaylistsReq.json()
         getForkedPlaylistsRes.forEach((fork) => {
@@ -51,7 +51,7 @@ const Fork = () => {
         })
 
         const req = await fetch(
-          `api/spotify/getUserPlaylists?access_token=${session.access_token}`
+          `/api/spotify/getUserPlaylists?access_token=${session.access_token}`
         )
         const res = await req.json()
         const usrPlaylists = res.data.items.reduce((result, playlist) => {
@@ -70,8 +70,8 @@ const Fork = () => {
           }
           return result
         }, [])
-        setUserPlaylists(usrPlaylists)
-
+        setUserPlaylists([...usrPlaylists])
+        console.log(usrPlaylists[0])
         getForkedPlaylistsRes.forEach((e) => {
           if (usrPlaylistObj[e.playlist_id]) {
             playlists.push({
@@ -84,8 +84,8 @@ const Fork = () => {
           }
         })
         setForkedPlaylists([...playlists])
-
-        await fetch(`api/supabase/deletePlaylists`, {
+        console.log(getForkedPlaylistsRes[0])
+        await fetch(`/api/supabase/deletePlaylists`, {
           method: "POST",
           body: JSON.stringify({
             spotify_id: user.id,

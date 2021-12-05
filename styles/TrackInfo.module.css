@@ -26,6 +26,7 @@
   background: var(--md-black);
   border-radius: 15px;
   padding: 15px 35px;
+  flex: 0 0 100%;
 }
 
 .track__image {

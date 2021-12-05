@@ -26,6 +26,7 @@ a {
   padding: 0;
   box-sizing: border-box;
   vertical-align: baseline;
+  font-family: var(--primary-font);
 }
 
 button {

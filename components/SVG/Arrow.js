@@ -1,7 +1,7 @@
-const Arrow = ({ left }) => {
+const Arrow = ({ style }) => {
   return (
     <>
-      <svg
+      {/*<svg
         width="10"
         height="15"
         viewBox="0 0 10 15"
@@ -29,6 +29,17 @@ const Arrow = ({ left }) => {
           stroke-width="1.5"
           stroke-linecap="round"
         />
+      </svg>*/}
+      <svg
+        role="img"
+        height="16"
+        width="16"
+        fill="#fff"
+        //transform="rotate(180)"
+        viewBox="0 0 16 16"
+        className={style}
+      >
+        <path d="M3 6l5 5.794L13 6z"></path>
       </svg>
     </>
   )
