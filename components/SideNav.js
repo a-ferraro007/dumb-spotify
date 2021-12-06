@@ -28,7 +28,8 @@ const SideNav = () => {
         </li>
         <li
           className={`${styles.sideNav__li} ${
-            router.pathname === "/collection/playlists"
+            router.pathname === "/collection/playlists" ||
+            router.pathname.includes("/playlists/")
               ? styles.sideNav__liActive
               : ""
           }`}
