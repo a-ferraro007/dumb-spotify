@@ -10,9 +10,11 @@ const SideNav = () => {
 
   return (
     <div className={styles.sideNav__container}>
-      <a className={styles.sideNav__logoContainer}>
-        <Spotify />
-      </a>
+      <Link href="/">
+        <a className={styles.sideNav__logoContainer}>
+          <Spotify />
+        </a>
+      </Link>
       <ul className={styles.sideNav__liContent}>
         <li
           className={`${styles.sideNav__li} ${
