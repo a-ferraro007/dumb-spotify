@@ -8,16 +8,12 @@ import { useAuth } from "../context/auth"
 
 const Header = ({ props }) => {
   const { radioBtnState, handleSetRadioBtn } = usePlaylist()
-  const [hideBtn, setHideBtn] = useState(false)
+  const [showBtnBar, setShowBtnBar] = useState(false)
   const { user } = useAuth()
   const router = useRouter()
-  console.log(router)
 
   useEffect(() => {
-    console.log(user)
-    if (router.route.includes("/playlists/")) {
-      setHideBtn(true)
-    }
+    if (router.pathname === "/collection/playlists") setShowBtnBar(true)
   }, [router, user])
 
   return (
@@ -25,7 +21,7 @@ const Header = ({ props }) => {
       {user ? (
         <>
           <div className={styles.header__left}>
-            {!hideBtn ? (
+            {showBtnBar ? (
               <>
                 <input
                   type="radio"

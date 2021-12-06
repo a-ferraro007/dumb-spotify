@@ -45,17 +45,22 @@ const playlists = () => {
   useEffect(() => {
     ;(async () => {
       if (!session || !user) return
-      console.log(playlist)
-      setIsLoading(true)
-      const tracks = await fetch(
-        `/api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
-      )
-      const tracksRes = await tracks.json()
-      const trackItems = tracksRes.tracks.map((item) => {
-        return item.track
-      })
-      setTracks([...trackItems])
-      //setIsLoading(false)
+
+      try {
+        console.log("playlist", playlist)
+        setIsLoading(true)
+        const tracks = await fetch(
+          `/api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
+        )
+        const tracksRes = await tracks.json()
+        const trackItems = tracksRes.tracks?.map((item) => {
+          return item.track
+        })
+        setIsLoading(false)
+        setTracks([...trackItems])
+      } catch (error) {
+        console.error(error)
+      }
     })()
   }, [session])
 

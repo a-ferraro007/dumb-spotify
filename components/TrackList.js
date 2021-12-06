@@ -30,8 +30,8 @@ const TrackList = ({ tracks }) => {
               <div className={styles.track__image}>
                 <Image
                   src={
-                    track.album.images[2]
-                      ? track.album.images[2].url
+                    track?.album?.images[2]
+                      ? track?.album?.images[2].url
                       : "/placeholder.png"
                   }
                   width={36}

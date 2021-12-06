@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       const { access_token, refresh_token, expires_in } = await req.json()
 
       if (access_token && refresh_token) {
-        document.cookie = `access_token=${access_token}; expires=${expires_in}`
+        document.cookie = `access_token=${access_token};path=/;expires=${expires_in};`
         document.cookie = `refresh_token=${refresh_token}`
         const user = await getUser(access_token)
         setUser(user)
@@ -57,12 +57,13 @@ export const AuthProvider = ({ children }) => {
   }
 
   const getNewAuthTokens = async (token) => {
+    console.log("toke s")
     const refreshToken = getCookie("refresh_token")
     const req = await fetch(`/api/auth/token/refresh/${refreshToken}`)
     const { access_token, expires_in } = await req.json()
 
     if (access_token) {
-      document.cookie = `access_token=${access_token}; max-age=${expires_in}`
+      document.cookie = `access_token=${access_token};path=/;max-age=${expires_in};`
       const user = await getUser(access_token)
       setUser(user)
       setSession({ access_token, refresh_token: refreshToken, expires_in })
