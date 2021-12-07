@@ -28,8 +28,8 @@ function Loading({ width, height }) {
           ></animate>
         </circle>
       </g>
-      <g transform="translate(71.213 71.213) rotate(45)">
-        <circle r="6" fill="#1db954" fillOpacity="0.875">
+      <g transform="rotate(45 -50.355 121.568)">
+        <circle r="6" fill="#1db954">
           <animateTransform
             attributeName="transform"
             begin="-0.75s"
@@ -49,8 +49,8 @@ function Loading({ width, height }) {
           ></animate>
         </circle>
       </g>
-      <g transform="translate(50 80) rotate(90)">
-        <circle r="6" fill="#1db954" fillOpacity="0.75">
+      <g transform="rotate(90 -15 65)">
+        <circle r="6" fill="#1db954">
           <animateTransform
             attributeName="transform"
             begin="-0.625s"
@@ -70,8 +70,8 @@ function Loading({ width, height }) {
           ></animate>
         </circle>
       </g>
-      <g transform="translate(28.787 71.213) rotate(135)">
-        <circle r="6" fill="#1db954" fillOpacity="0.625">
+      <g transform="rotate(135 -.355 41.568)">
+        <circle r="6" fill="#1db954">
           <animateTransform
             attributeName="transform"
             begin="-0.5s"
@@ -91,8 +91,8 @@ function Loading({ width, height }) {
           ></animate>
         </circle>
       </g>
-      <g transform="translate(20 50) rotate(180)">
-        <circle r="6" fill="#1db954" fillOpacity="0.5">
+      <g transform="rotate(180 10 25)">
+        <circle r="6" fill="#1db954">
           <animateTransform
             attributeName="transform"
             begin="-0.375s"
@@ -112,8 +112,8 @@ function Loading({ width, height }) {
           ></animate>
         </circle>
       </g>
-      <g transform="translate(28.787 28.787) rotate(225)">
-        <circle r="6" fill="#1db954" fillOpacity="0.375">
+      <g transform="rotate(-135 20.355 8.432)">
+        <circle r="6" fill="#1db954">
           <animateTransform
             attributeName="transform"
             begin="-0.25s"
@@ -133,8 +133,8 @@ function Loading({ width, height }) {
           ></animate>
         </circle>
       </g>
-      <g transform="translate(50 20) rotate(270)">
-        <circle r="6" fill="#1db954" fillOpacity="0.25">
+      <g transform="rotate(-90 35 -15)">
+        <circle r="6" fill="#1db954">
           <animateTransform
             attributeName="transform"
             begin="-0.125s"
@@ -154,8 +154,8 @@ function Loading({ width, height }) {
           ></animate>
         </circle>
       </g>
-      <g transform="translate(71.213 28.787) rotate(315)">
-        <circle r="6" fill="#1db954" fillOpacity="0.125">
+      <g transform="rotate(-45 70.355 -71.568)">
+        <circle r="6" fill="#1db954">
           <animateTransform
             attributeName="transform"
             begin="0s"
