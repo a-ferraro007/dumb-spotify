@@ -7,7 +7,7 @@ import Profile from "./SVG/Profile"
 import { useAuth } from "../context/auth"
 
 const Header = ({ props }) => {
-  const { radioBtnState, handleSetRadioBtn } = usePlaylist()
+  const { radioBtnState, handleSetRadioBtn, playlist } = usePlaylist()
   const [showBtnBar, setShowBtnBar] = useState(false)
   const { user } = useAuth()
   const router = useRouter()
@@ -15,6 +15,10 @@ const Header = ({ props }) => {
   useEffect(() => {
     if (router.pathname === "/collection/playlists") setShowBtnBar(true)
   }, [router, user])
+
+  useEffect(() => {
+    console.log("header", playlist)
+  }, [playlist])
 
   return (
     <div className={styles.header}>

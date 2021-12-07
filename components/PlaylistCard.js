@@ -17,6 +17,7 @@ const PlaylistCard = ({ playlist, fork, master }) => {
           handleSetPlaylist(playlist)
           handleSetMasterId(master)
         } else {
+          playlist.isFork = false
           handleSetPlaylist(playlist)
         }
         router.push(`/playlists/${playlist.playlistId}`)

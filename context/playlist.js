@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 export const PlaylistContext = createContext({})
 
 export const PlaylistProvider = ({ children }) => {
-  const [playlist, setPlaylist] = useState({})
+  const [playlist, setPlaylist] = useState({ isFork: false })
   const [masterId, setMasterId] = useState("")
   const [radioBtnState, setRadioBtnState] = useState("liked")
 

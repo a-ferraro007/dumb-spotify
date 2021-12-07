@@ -112,6 +112,19 @@ const playlists = () => {
     }
   }
 
+  const handleDeletePlaylist = async () => {
+    console.log(playlist)
+    try {
+      const data = await fetch(
+        `/api/spotify/deletePlaylist?access_token=${session.access_token}&playlist_id=${playlist.playlistId}&master_id=${masterId}&spotify_id=${user.id}&isFork=${playlist.isFork}`
+      )
+      console.log(data)
+      router.replace("/")
+    } catch (error) {
+      console.error
+    }
+  }
+
   if (!playlist) return <> </>
   return (
     <>
@@ -167,6 +180,12 @@ const playlists = () => {
                       <span className={styles.fork__btnText}> fork </span>
                     </button>
                   )}
+                  <button
+                    style={{ color: "#fff" }}
+                    onClick={handleDeletePlaylist}
+                  >
+                    delete
+                  </button>
                 </div>{" "}
               </div>
             </div>
