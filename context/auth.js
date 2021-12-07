@@ -1,10 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useRouter,
-} from "react"
+import { useRouter } from "next/router"
+import { createContext, useContext, useEffect, useState } from "react"
 import { getCookie } from "../lib/getCookie"
 
 export const AuthContext = createContext({
@@ -17,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const router = useRouter()
 
   const authorizationCode = async (router) => {
     const req = await fetch("/api/auth/authorize")
@@ -91,9 +87,23 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const handleLogOut = () => {
+    console.log("log")
+    document.cookie =
+      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+    document.cookie =
+      "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+
+    setUser(null)
+    setSession(null)
+    router.replace("/login")
+  }
+
   useEffect(() => {
-    console.log("cookies")
+    console.log("cookies", user)
   }, [user])
+
   return (
     <AuthContext.Provider
       value={{
@@ -103,6 +113,7 @@ export const AuthProvider = ({ children }) => {
         authorizationCode,
         getAuthTokens,
         getNewAuthTokens,
+        handleLogOut,
       }}
     >
       {" "}

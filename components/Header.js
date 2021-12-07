@@ -5,11 +5,13 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Profile from "./SVG/Profile"
 import { useAuth } from "../context/auth"
+import LinkOut from "./SVG/LinkOut"
 
 const Header = ({ props }) => {
   const { radioBtnState, handleSetRadioBtn, playlist } = usePlaylist()
   const [showBtnBar, setShowBtnBar] = useState(false)
-  const { user } = useAuth()
+  const [showDropdown, setShowDropdown] = useState(false)
+  const { user, handleLogOut } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
@@ -70,7 +72,12 @@ const Header = ({ props }) => {
             )}
           </div>
           <div className={styles.header__right}>
-            <button className={styles.header__profileBtn}>
+            <button
+              className={styles.header__profileBtn}
+              onClick={() => {
+                setShowDropdown(!showDropdown)
+              }}
+            >
               {" "}
               <div className={styles.header__icon}>
                 <Profile />
@@ -85,6 +92,37 @@ const Header = ({ props }) => {
               />
             </button>
           </div>
+          {showDropdown ? (
+            <div className={styles.header__dropdown}>
+              <div>
+                <ul className={styles.header__dropdownUl}>
+                  <li className={styles.header__dropdownLi}>
+                    <a
+                      className={styles.header__dropdownLink}
+                      href="https://open.spotify.com/"
+                      target="_blank"
+                    >
+                      <span className={styles.header__dropdownLinkText}>
+                        {" "}
+                        account{" "}
+                      </span>
+                      <LinkOut />
+                    </a>
+                  </li>
+                  <li className={styles.header__dropdownLi}>
+                    <button
+                      className={styles.header__dropdownLink}
+                      onClick={handleLogOut}
+                    >
+                      log out
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
         <> </>

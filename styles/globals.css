@@ -33,3 +33,7 @@ button {
   background: transparent;
   border: none;
 }
+
+li {
+  list-style: none;
+}

@@ -25,12 +25,12 @@ const Fork = () => {
           await getNewAuthTokens(token)
         } catch (error) {
           console.log("error generating new auth token", error)
-          router.replace("/")
+          router.replace("/login")
         }
       })()
       setRefreshToken(token)
     } else {
-      router.replace("/")
+      router.replace("/login")
     }
   }, [])
 
