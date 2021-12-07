@@ -87,8 +87,9 @@ const Header = ({ props }) => {
                 {user.display_name}{" "}
               </span>
               <Arrow
-                classNam={styles.header__Arrow}
+                className={styles.header__Arrow}
                 style={styles.header__Arrow}
+                active={showDropdown}
               />
             </button>
           </div>
