@@ -8,7 +8,7 @@ import styles from "../styles/Home.module.css"
 import { usePlaylist } from "../context/playlist"
 const getGreeting = () => {
   const hour = new Date(Date.now()).getHours()
-  if (hour >= 17 && hour <= 24) {
+  if (hour >= 17 || hour === 0) {
     return "good evening"
   } else if (hour >= 1 && hour < 12) {
     return "good morning"
