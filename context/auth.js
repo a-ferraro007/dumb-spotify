@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
           body: JSON.stringify({ id: user.id }),
         })
         setSession({ access_token, refresh_token, expires_in })
-        await router.replace("/collection/playlists")
+        await router.replace("/")
       } else {
         throw new Error(
           `Error returning Access Token: ${JSON.stringify({
@@ -52,8 +52,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const getNewAuthTokens = async (token) => {
-    console.log("toke s")
+  const getNewAuthTokens = async () => {
     const refreshToken = getCookie("refresh_token")
     const req = await fetch(`/api/auth/token/refresh/${refreshToken}`)
     const { access_token, expires_in } = await req.json()
