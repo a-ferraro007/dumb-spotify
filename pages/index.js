@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import router from "next/router"
 import Layout from "../components/Layout"
 import Link from "next/link"
@@ -6,10 +6,21 @@ import { getCookie } from "../lib/getCookie"
 import { useAuth } from "../context/auth"
 import styles from "../styles/Home.module.css"
 import { usePlaylist } from "../context/playlist"
+const getGreeting = () => {
+  const hour = new Date(Date.now()).getHours()
+  if (hour >= 17 && hour <= 24) {
+    return "good evening"
+  } else if (hour >= 1 && hour < 12) {
+    return "good morning"
+  } else if (hour >= 12 && hour < 17) {
+    return "good afternoon"
+  }
+}
 
 const index = () => {
   const { handleSetRadioBtn } = usePlaylist()
   const { getNewAuthTokens } = useAuth()
+  const [greeting] = useState(getGreeting())
 
   useEffect(() => {
     const token = getCookie("refresh_token")
@@ -31,7 +42,7 @@ const index = () => {
   return (
     <Layout>
       <div className={styles.home__container}>
-        <h1 className={styles.home__heading}> good evening </h1>
+        <h1 className={styles.home__heading}> {greeting} </h1>
 
         <div className={styles.home__cardContainer}>
           <div className={styles.home__card}>
