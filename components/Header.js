@@ -18,10 +18,6 @@ const Header = ({ props }) => {
     if (router.pathname === "/collection/playlists") setShowBtnBar(true)
   }, [router, user])
 
-  useEffect(() => {
-    console.log("header", playlist)
-  }, [playlist])
-
   return (
     <div className={styles.header}>
       {user ? (

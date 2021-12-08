@@ -44,10 +44,33 @@ const playlists = () => {
 
   useEffect(() => {
     ;(async () => {
-      if (!session || !user) return
+      if (!session) return
+      if (!playlist.playlistId) {
+        const { playlistId } = router.query
+        const getPlaylistRes = await fetch(
+          `/api/spotify/getPlaylist?playlist_id=${playlistId}&access_token=${session.access_token}`
+        )
 
+        const playlistObj = await getPlaylistRes.json()
+        const playlist = {
+          name: playlistObj.name,
+          playlistId: playlistObj.id,
+          trackCount: playlistObj.tracks,
+          trackTotal: playlistObj.tracks.total,
+          reqCount: Math.round(playlistObj.tracks.total / 100 + 0.5),
+          owner: playlistObj.owner,
+          image: playlistObj?.images[0]?.url,
+          description: playlistObj.description,
+        }
+        handleSetPlaylist(playlist)
+      }
+    })()
+  }, [session])
+
+  useEffect(() => {
+    ;(async () => {
+      if (!session || !user) return
       try {
-        console.log("playlist", playlist)
         setIsLoading(true)
         const tracks = await fetch(
           `/api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
@@ -62,7 +85,7 @@ const playlists = () => {
         console.error(error)
       }
     })()
-  }, [session])
+  }, [session, playlist])
 
   const handleOnClick = async () => {
     if (playlist.isFork) {
