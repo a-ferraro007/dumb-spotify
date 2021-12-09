@@ -1,3 +1,4 @@
+import Head from "next/head"
 import styles from "../styles/Login.module.css"
 import SpotifyIntro from "../components/SVG/SpotifyIntro"
 import SpotifyIntroMobile from "../components/SVG/SpotifyIntroMobile"
@@ -50,6 +51,9 @@ export default function index() {
   }
   return (
     <>
+      <Head>
+        <title>dumb spotify</title>
+      </Head>
       <div className={styles.container}>
         <div>
           <SpotifyIntro name={styles.logo} />
