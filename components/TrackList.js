@@ -92,9 +92,26 @@ const TrackList = ({ tracks }) => {
                       i === track.artists.length - 1 ||
                       track.artists.length === 1
                     ) {
-                      return e.name
+                      return (
+                        <a
+                          className={styles.track__artist__link}
+                          href={e.external_urls.spotify}
+                        >
+                          {e.name}
+                        </a>
+                      )
                     } else {
-                      return `${e.name}, `
+                      return (
+                        <>
+                          <a
+                            className={styles.track__artist__link}
+                            href={e.external_urls.spotify}
+                          >
+                            {e.name}
+                          </a>
+                          , &nbsp;
+                        </>
+                      )
                     }
                   })}
                 </span>

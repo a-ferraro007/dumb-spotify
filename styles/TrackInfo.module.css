@@ -52,6 +52,7 @@
 }
 
 .tracklist__cellOPaque {
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -63,4 +64,8 @@
 .track__artistContainer {
   display: flex;
   flex-direction: column;
+}
+
+.track__artist__link:hover {
+  text-decoration: underline;
 }
