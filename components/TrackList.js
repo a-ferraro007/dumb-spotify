@@ -1,7 +1,9 @@
+import { useState } from "react"
 import styles from ".././styles/TrackInfo.module.css"
 import Image from "next/image"
 
 const TrackList = ({ tracks }) => {
+  const [isSelected, setIsSelected] = useState(null)
   console.log(tracks[4])
   const returnTime = (ms) => {
     const rd = Math.round(100 * (ms / 1000 / 60)) / 100
@@ -9,10 +11,18 @@ const TrackList = ({ tracks }) => {
     const th = Math.round(100 * (rd - Math.floor(rd))) + ""
     return wh + ":" + th
   }
+
+  const select = (index) => {
+    if (index === isSelected) {
+      setIsSelected(null)
+      return
+    }
+    setIsSelected(index)
+  }
   return (
     <div className={styles.tracklist__container}>
       <div
-        className={styles.tracklist__grid}
+        className={styles.tracklist__grid__header}
         style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}
       >
         <span
@@ -45,7 +55,13 @@ const TrackList = ({ tracks }) => {
 
       {tracks.map((track, index) => {
         return (
-          <div className={styles.tracklist__grid} key={index}>
+          <div
+            className={`${styles.tracklist__grid} ${
+              isSelected === index ? styles.tracklist__grid__selected : ""
+            }`}
+            key={index}
+            onClick={() => select(index)}
+          >
             <span
               className={`${styles.tracklist__cell} ${styles.tracklist__cellOPaque}`}
             >
