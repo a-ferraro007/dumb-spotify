@@ -1,7 +1,7 @@
 .tracklist__grid {
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: 0.01fr 0.75fr 0.24fr;
+  grid-template-columns: 0.5fr 6fr 3fr 2fr 1fr; /*0.01fr 0.75fr 0.24fr;*/
   height: 68px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -33,4 +33,18 @@
   height: 46px;
   width: 46px;
   margin-right: 15px;
+}
+
+.tracklist__cellOPaque {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.track__artist {
+  padding: 5px 0px;
+  font-size: 12px;
+}
+
+.track__artistContainer {
+  display: flex;
+  flex-direction: column;
 }
