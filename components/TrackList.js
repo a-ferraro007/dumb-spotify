@@ -11,7 +11,10 @@ const TrackList = ({ tracks }) => {
   }
   return (
     <div className={styles.tracklist__container}>
-      <div className={styles.tracklist__grid}>
+      <div
+        className={styles.tracklist__grid}
+        style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}
+      >
         <span
           className={`${styles.tracklist__cell} ${styles.tracklist__cellHeader}`}
         >

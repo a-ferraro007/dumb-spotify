@@ -3,7 +3,6 @@
   grid-gap: 16px;
   grid-template-columns: 0.5fr 6fr 3fr 2fr 1fr; /*0.01fr 0.75fr 0.24fr;*/
   height: 68px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tracklist__grid:last-child {
@@ -23,7 +22,7 @@
 
 .tracklist__container {
   /*width: 50%;*/
-  background: var(--md-black);
+  /*background: var(--md-black);*/
   border-radius: 15px;
   padding: 15px 35px;
   flex: 0 0 100%;
