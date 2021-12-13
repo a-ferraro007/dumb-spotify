@@ -23,6 +23,7 @@ const playlists = () => {
   const { session, user, getNewAuthTokens } = useAuth()
   const [isCreatingFork, setIsCreatingFork] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [bgColor, setBgColor] = useState("rgb(80, 56, 160)")
   const router = useRouter()
 
   useEffect(() => {
@@ -155,6 +156,13 @@ const playlists = () => {
         {!isCreatingFork ? (
           <div className={styles.playlist__container}>
             <div className={styles.playlist__headerContainer}>
+              <div
+                className={styles.playlist__headerBgColor}
+                style={{ backgroundColor: bgColor }}
+              >
+                {" "}
+              </div>
+              <div className={styles.playlist__headerBg}></div>
               <div className={styles.playlist__imageContainer}>
                 <Image
                   src={playlist.image ? playlist.image : "/placeholder.png"}
@@ -165,7 +173,7 @@ const playlists = () => {
                 />
               </div>
 
-              <div>
+              <div style={{ zIndex: "10" }}>
                 <span
                   className={styles.playlist__subscript}
                   style={{ color: "var(--primary-text-green)" }}
@@ -213,7 +221,17 @@ const playlists = () => {
               </div>
             </div>
 
-            <div className={styles.playlist__tracksContainer}>
+            <div
+              className={styles.playlist__tracksContainer}
+              style={{ position: "relative" }}
+            >
+              <div
+                className={styles.playlist__headerBgColorBot}
+                style={{ backgroundColor: bgColor }}
+              >
+                {" "}
+              </div>
+              <div className={styles.playlist__headerBgBot}></div>
               {!tracks.length && isLoading ? (
                 <Loading width={50} height={50} />
               ) : (

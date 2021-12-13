@@ -11,6 +11,7 @@ const Header = ({ props }) => {
   const { radioBtnState, handleSetRadioBtn, playlist } = usePlaylist()
   const [showBtnBar, setShowBtnBar] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
+  const [bgColor, setBgColor] = useState("rgba(80, 56, 160, 0)")
   const { user, handleLogOut } = useAuth()
   const router = useRouter()
 
@@ -19,7 +20,7 @@ const Header = ({ props }) => {
   }, [router, user])
 
   return (
-    <div className={styles.header}>
+    <div className={styles.header} style={{ backgroundColor: bgColor }}>
       {user ? (
         <>
           <div className={styles.header__left}>
