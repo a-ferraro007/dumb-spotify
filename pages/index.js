@@ -18,6 +18,7 @@ const getGreeting = () => {
 }
 
 const index = () => {
+  const [bgColor, setBgColor] = useState("rgb(120, 32, 40)") //move this into context?
   const { handleSetRadioBtn } = usePlaylist()
   const { getNewAuthTokens } = useAuth()
   const [greeting] = useState(getGreeting())
@@ -41,22 +42,26 @@ const index = () => {
 
   return (
     <Layout>
-      <div className={styles.home__container}>
-        <h1 className={styles.home__heading}> {greeting} </h1>
+      <div className={styles.container} style={{ backgroundColor: bgColor }}>
+        <div className={styles.home__container}>
+          <h1 className={styles.home__heading}> {greeting} </h1>
 
-        <div className={styles.home__cardContainer}>
-          <div className={styles.home__card}>
-            <Link href="/collection/playlists">
-              <a onClick={() => handleSetRadioBtn("liked")}>liked playlists</a>
-            </Link>
-          </div>
-          <div className={styles.home__card}>
-            {" "}
-            <Link href="/collection/playlists">
-              <a onClick={() => handleSetRadioBtn("forked")}>
-                forked playlists
-              </a>
-            </Link>
+          <div className={styles.home__cardContainer}>
+            <div className={styles.home__card}>
+              <Link href="/collection/playlists">
+                <a onClick={() => handleSetRadioBtn("liked")}>
+                  liked playlists
+                </a>
+              </Link>
+            </div>
+            <div className={styles.home__card}>
+              {" "}
+              <Link href="/collection/playlists">
+                <a onClick={() => handleSetRadioBtn("forked")}>
+                  forked playlists
+                </a>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
