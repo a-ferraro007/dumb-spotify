@@ -18,8 +18,8 @@ const getGreeting = () => {
 }
 
 const index = () => {
-  const [bgColor, setBgColor] = useState("rgb(120, 32, 40)") //move this into context?
-  const { handleSetRadioBtn } = usePlaylist()
+  const [bgColor, setBgColor] = useState("rgb(83, 83, 83)") //move this into context?
+  const { handleSetRadioBtn, mood, handleSetMood } = usePlaylist()
   const { getNewAuthTokens } = useAuth()
   const [greeting] = useState(getGreeting())
 
@@ -40,21 +40,39 @@ const index = () => {
     }
   }, [])
 
+  useEffect(() => {
+    handleSetMood("rgb(83, 83, 83)")
+  }, [])
+
+  const handleMouseOverLiked = () => {
+    handleSetMood("rgb(80, 40, 240)")
+  }
+
+  const handleMouseOverForked = () => {
+    handleSetMood("rgb(248, 160, 88)")
+  }
+
   return (
     <Layout>
-      <div className={styles.container} style={{ backgroundColor: bgColor }}>
+      <div className={styles.container} style={{ backgroundColor: mood }}>
         <div className={styles.home__container}>
           <h1 className={styles.home__heading}> {greeting} </h1>
 
           <div className={styles.home__cardContainer}>
-            <div className={styles.home__card}>
+            <div
+              className={styles.home__card}
+              onMouseOver={handleMouseOverLiked}
+            >
               <Link href="/collection/playlists">
                 <a onClick={() => handleSetRadioBtn("liked")}>
                   liked playlists
                 </a>
               </Link>
             </div>
-            <div className={styles.home__card}>
+            <div
+              className={styles.home__card}
+              onMouseOver={handleMouseOverForked}
+            >
               {" "}
               <Link href="/collection/playlists">
                 <a onClick={() => handleSetRadioBtn("forked")}>

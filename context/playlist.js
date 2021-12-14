@@ -6,6 +6,7 @@ export const PlaylistProvider = ({ children }) => {
   const [playlist, setPlaylist] = useState({ isFork: false })
   const [masterId, setMasterId] = useState("")
   const [radioBtnState, setRadioBtnState] = useState("liked")
+  const [mood, setMood] = useState("rgb(83, 83, 83)")
 
   const handleSetPlaylist = (playlist) => {
     setPlaylist(playlist)
@@ -19,15 +20,21 @@ export const PlaylistProvider = ({ children }) => {
     setRadioBtnState(radioBtnState)
   }
 
+  const handleSetMood = (mood) => {
+    setMood(mood)
+  }
+
   return (
     <PlaylistContext.Provider
       value={{
         playlist,
         masterId,
         radioBtnState,
+        mood,
         handleSetMasterId,
         handleSetPlaylist,
         handleSetRadioBtn,
+        handleSetMood,
       }}
     >
       {" "}

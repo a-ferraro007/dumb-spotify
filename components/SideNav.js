@@ -10,7 +10,7 @@ const SideNav = () => {
 
   return (
     <div className={styles.sideNav__container}>
-      <Link href="/">
+      <Link href="/" className={`${styles.sideNav__li} `}>
         <a className={styles.sideNav__logoContainer}>
           <Spotify />
         </a>
@@ -22,7 +22,11 @@ const SideNav = () => {
           }`}
         >
           <Link href="/">
-            <a className={styles.sideNav__liLink}>
+            <a
+              className={`${styles.sideNav__liLink} ${
+                router.pathname === "/" ? styles.sideNav__liLinkActive : ""
+              }`}
+            >
               <Home />
               <span className={`${styles.sideNav__liText} `}> home </span>
             </a>
@@ -37,9 +41,16 @@ const SideNav = () => {
           }`}
         >
           <Link href="/collection/playlists">
-            <a className={styles.sideNav__liLink}>
+            <a
+              className={`${styles.sideNav__liLink} ${
+                router.pathname === "/collection/playlists" ||
+                router.pathname.includes("/playlists/")
+                  ? styles.sideNav__liLinkActive
+                  : ""
+              }`}
+            >
               <Library />
-              <span className={`${styles.sideNav__liText} `}>
+              <span className={`${styles.sideNav__liText}`}>
                 {" "}
                 your library{" "}
               </span>

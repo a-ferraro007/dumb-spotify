@@ -10,22 +10,34 @@ import Loading from "../../components/SVG/Loading"
 import { getCookie } from "../../lib/getCookie"
 import { useRouter } from "next/router"
 
+//export async function getServerSideProps(context) {
+//  console.log("context", context)
+//  return {
+//    props: {}, // will be passed to the page component as props
+//  }
+//}
+
 const playlists = () => {
   const {
     playlist,
     radioBtnState,
     masterId,
+    mood,
     handleSetMasterId,
     handleSetPlaylist,
     handleSetRadioBtn,
+    handleSetMood,
   } = usePlaylist()
   const [tracks, setTracks] = useState([])
   const { session, user, getNewAuthTokens } = useAuth()
   const [isCreatingFork, setIsCreatingFork] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [bgColor, setBgColor] = useState("rgb(80, 56, 160)")
+  //const [bgColor, setBgColor] = useState("rgb(80, 56, 160)")
   const router = useRouter()
-
+  //
+  useEffect(() => {
+    handleSetMood("rgb(80, 56, 160)")
+  }, [])
   useEffect(() => {
     const token = getCookie("refresh_token")
     if (token) {
@@ -136,18 +148,21 @@ const playlists = () => {
     }
   }
 
-  const handleDeletePlaylist = async () => {
-    console.log(playlist)
-    try {
-      const data = await fetch(
-        `/api/spotify/deletePlaylist?access_token=${session.access_token}&playlist_id=${playlist.playlistId}&master_id=${masterId}&spotify_id=${user.id}&isFork=${playlist.isFork}`
-      )
-      console.log(data)
-      router.replace("/")
-    } catch (error) {
-      console.error
-    }
-  }
+  //There's no such thing as deleting a playlist in spotify
+  //need to figure out how they do it.
+
+  //const handleDeletePlaylist = async () => {
+  //  console.log(playlist)
+  //  try {
+  //    const data = await fetch(
+  //      `/api/spotify/deletePlaylist?access_token=${session.access_token}&playlist_id=${playlist.playlistId}&master_id=${masterId}&spotify_id=${user.id}&isFork=${playlist.isFork}`
+  //    )
+  //    console.log(data)
+  //    router.replace("/")
+  //  } catch (error) {
+  //    console.error
+  //  }
+  //}
 
   if (!playlist) return <> </>
   return (
@@ -158,7 +173,7 @@ const playlists = () => {
             <div className={styles.playlist__headerContainer}>
               <div
                 className={styles.playlist__headerBgColor}
-                style={{ backgroundColor: bgColor }}
+                style={{ backgroundColor: mood }}
               >
                 {" "}
               </div>
@@ -173,7 +188,7 @@ const playlists = () => {
                 />
               </div>
 
-              <div style={{ zIndex: "10" }}>
+              <div style={{ zIndex: "10", alignSelf: "end" }}>
                 <span
                   className={styles.playlist__subscript}
                   style={{ color: "var(--primary-text-green)" }}
@@ -211,12 +226,12 @@ const playlists = () => {
                       <span className={styles.fork__btnText}> fork </span>
                     </button>
                   )}
-                  <button
+                  {/*<button
                     style={{ color: "#fff" }}
                     onClick={handleDeletePlaylist}
                   >
                     delete
-                  </button>
+                  </button>*/}
                 </div>{" "}
               </div>
             </div>
@@ -227,12 +242,12 @@ const playlists = () => {
             >
               <div
                 className={styles.playlist__headerBgColorBot}
-                style={{ backgroundColor: bgColor }}
+                style={{ backgroundColor: mood }}
               >
                 {" "}
               </div>
               <div className={styles.playlist__headerBgBot}></div>
-              {!tracks.length && isLoading ? (
+              {(!tracks.length && isLoading) || !tracks.length ? (
                 <Loading width={50} height={50} />
               ) : (
                 <TrackList tracks={tracks} />
@@ -246,7 +261,7 @@ const playlists = () => {
               <Loading width={50} height={50} />
               <span className={styles.creating__forkHeading}>
                 forking:{" "}
-                <span style={{ color: "rgba(255,255,255,.7)" }}>
+                <span style={{ color: "rgba(255,255,255,1)" }}>
                   {" "}
                   {playlist.name}{" "}
                 </span>

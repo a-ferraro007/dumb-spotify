@@ -8,16 +8,22 @@ import { useAuth } from "../context/auth"
 import LinkOut from "./SVG/LinkOut"
 
 const Header = ({ props }) => {
-  const { radioBtnState, handleSetRadioBtn, playlist } = usePlaylist()
+  const { radioBtnState, handleSetRadioBtn, playlist, mood } = usePlaylist()
   const [showBtnBar, setShowBtnBar] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const [bgColor, setBgColor] = useState("rgba(80, 56, 160, 0)") //move this into context?
   const { user, handleLogOut } = useAuth()
   const router = useRouter()
 
+  //pull in gsap to tween the mood opacity on scroll
+
   useEffect(() => {
     if (router.pathname === "/collection/playlists") setShowBtnBar(true)
   }, [router, user])
+
+  useEffect(() => {
+    console.log(mood)
+  }, [mood])
 
   return (
     <div className={styles.header} style={{ backgroundColor: bgColor }}>

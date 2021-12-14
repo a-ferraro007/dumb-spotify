@@ -36,14 +36,20 @@
   font-family: var(--primary-font);
   font-weight: bold;
 }
-
+/*
 .sideNav__liText {
-  color: #fff;
+  stroke: rgba(255, 255, 255, 0.6);
+
 }
+
+.sideNav__liText:hover {
+  color: rgba(255, 255, 255, 1);
+}*/
 
 .sideNav__liActive {
   border-radius: 4px;
   background: #282828;
+  color: #fff;
 }
 
 .sideNav__liLink {
@@ -53,4 +59,18 @@
   gap: 16px;
   width: 100%;
   height: 100%;
+  stroke: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sideNav__liLink:hover {
+  stroke: rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 1);
+  transition: cubic-bezier(0.19, 1, 0.22, 1);
+  transition-duration: 1.5s;
+}
+
+.sideNav__liLinkActive {
+  color: #fff;
+  stroke: #fff;
 }

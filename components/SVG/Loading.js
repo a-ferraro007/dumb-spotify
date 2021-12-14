@@ -6,6 +6,7 @@ function Loading({ width, height }) {
       display="block"
       preserveAspectRatio="xMidYMid"
       viewBox="0 0 100 100"
+      style={{ zIndex: 10 }}
     >
       <g transform="translate(80 50)">
         <circle r="6" fill="#1db954">
