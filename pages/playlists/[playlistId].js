@@ -11,17 +11,26 @@ import { getCookie } from "../../lib/getCookie"
 import { useRouter } from "next/router"
 import Music from "../../components/SVG/Music"
 
-//export async function getServerSideProps(context) {
-//  console.log("context", context)
-//  return {
-//    props: {}, // will be passed to the page component as props
-//  }
-//}
+export async function getServerSideProps(context) {
+  const { access_token, refresh_token, user } = context.req.cookies
+  if (!user || !refresh_token)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    }
+  return {
+    props: {
+      usr: JSON.parse(user),
+      propSession: { access_token, refresh_token },
+    },
+  }
+}
 
-const playlists = () => {
+const playlists = ({ usr, propSession }) => {
   const {
     playlist,
-    radioBtnState,
     masterId,
     mood,
     handleSetMasterId,
@@ -30,30 +39,15 @@ const playlists = () => {
     handleSetMood,
   } = usePlaylist()
   const [tracks, setTracks] = useState([])
-  const { session, user, getNewAuthTokens } = useAuth()
+  const { session, user, setUser, setSession } = useAuth()
   const [isCreatingFork, setIsCreatingFork] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  //const [bgColor, setBgColor] = useState("rgb(80, 56, 160)")
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
-  //
+
   useEffect(() => {
     handleSetMood("rgb(80, 56, 160)")
-  }, [])
-  useEffect(() => {
-    const token = getCookie("refresh_token")
-    if (token) {
-      ;(async () => {
-        try {
-          await getNewAuthTokens(token)
-        } catch (error) {
-          console.log("error generating new auth token", error)
-          router.replace("/")
-        }
-      })()
-      //setRefreshToken(token)
-    } else {
-      router.replace("/")
-    }
+    setUser(usr)
+    setSession(propSession)
   }, [])
 
   useEffect(() => {

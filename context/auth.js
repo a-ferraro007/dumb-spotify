@@ -99,10 +99,6 @@ export const AuthProvider = ({ children }) => {
     router.replace("/login")
   }
 
-  //useEffect(() => {
-  //  console.log("cookies", user)
-  //}, [user])
-
   return (
     <AuthContext.Provider
       value={{
@@ -113,6 +109,8 @@ export const AuthProvider = ({ children }) => {
         getAuthTokens,
         getNewAuthTokens,
         handleLogOut,
+        setUser,
+        setSession,
       }}
     >
       {" "}

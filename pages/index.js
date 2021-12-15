@@ -17,27 +17,32 @@ const getGreeting = () => {
   }
 }
 
-const index = () => {
-  const [bgColor, setBgColor] = useState("rgb(83, 83, 83)") //move this into context?
+export async function getServerSideProps(context) {
+  const { access_token, refresh_token, user } = context.req.cookies
+  if (!user || !refresh_token)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    }
+
+  return {
+    props: {
+      user: JSON.parse(user),
+      session: { access_token, refresh_token },
+    },
+  }
+}
+
+const index = ({ user, session }) => {
   const { handleSetRadioBtn, mood, handleSetMood } = usePlaylist()
-  const { getNewAuthTokens } = useAuth()
+  const { setUser, setSession } = useAuth()
   const [greeting] = useState(getGreeting())
 
   useEffect(() => {
-    const token = getCookie("refresh_token")
-    if (token) {
-      ;(async () => {
-        try {
-          await getNewAuthTokens(token)
-        } catch (error) {
-          console.log("error generating new auth token", error)
-          router.replace("/login")
-        }
-      })()
-      //setRefreshToken(token)
-    } else {
-      router.replace("/login")
-    }
+    setUser(user)
+    setSession(session)
   }, [])
 
   useEffect(() => {
