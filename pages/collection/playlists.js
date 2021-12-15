@@ -23,13 +23,18 @@ export async function getServerSideProps(context) {
       JSON.parse(user)
     )
   } catch (error) {
-    console.error("error srver side playlists", error)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    }
   }
 
   return {
     props: {
-      forked: playlist.forked,
-      liked: playlist.liked,
+      forked: playlist ? playlist.forked : [],
+      liked: playlist ? playlist.liked : [],
       usr: JSON.parse(user),
       propSession: { access_token, refresh_token },
     },
