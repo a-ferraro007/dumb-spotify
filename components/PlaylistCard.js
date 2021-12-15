@@ -2,6 +2,7 @@ import Image from "next/image"
 import styles from "../styles/PlaylistCard.module.css"
 import { useRouter } from "next/router"
 import { usePlaylist } from "../context/playlist"
+import Music from "./SVG/Music"
 
 const PlaylistCard = ({ playlist, fork, master }) => {
   const router = useRouter()
@@ -26,16 +27,20 @@ const PlaylistCard = ({ playlist, fork, master }) => {
     >
       <div className={styles.card}>
         <div className={styles.card__top}>
-          <Image
-            src={playlist.image ? playlist.image : "/placeholder.png"}
-            width={150}
-            height={150}
-            layout="fixed"
-            quality="100"
-            placeholder="blur"
-            blurDataURL="/placeholder.png"
-            className={styles.playlist__image}
-          ></Image>
+          {!playlist.image ? (
+            <Music width={150} height={150} />
+          ) : (
+            <Image
+              src={playlist.image ? playlist.image : "/symbol.svg"}
+              width={150}
+              height={150}
+              layout="fixed"
+              quality="100"
+              placeholder="blur"
+              blurDataURL="/symbol.svg"
+              className={styles.playlist__image}
+            ></Image>
+          )}
         </div>
         <div className={styles.card__bottom}>
           <span className={styles.card__heading}> {playlist.name}</span>

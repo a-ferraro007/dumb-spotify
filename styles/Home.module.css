@@ -11,7 +11,7 @@
   margin-top: -64px;
   background: linear-gradient(rgba(0, 0, 0, 0.6) 0, #121212 100%);
   transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transition-duration: 3s;
+  transition-duration: 2s;
 }
 
 .home__heading {

@@ -9,6 +9,7 @@ import ForkIcon from "../../components/SVG/ForkIcon"
 import Loading from "../../components/SVG/Loading"
 import { getCookie } from "../../lib/getCookie"
 import { useRouter } from "next/router"
+import Music from "../../components/SVG/Music"
 
 //export async function getServerSideProps(context) {
 //  console.log("context", context)
@@ -108,6 +109,21 @@ const playlists = () => {
     }
   }
 
+  useEffect(() => {
+    console.log(isLoading, tracks.length)
+  }, [isLoading])
+
+  const handleShowTracks = () => {
+    if (!tracks.length && isLoading) return <Loading width={50} height={50} />
+    else if (!tracks.length && !isLoading) {
+      return (
+        <span style={{ color: "#fff", zIndex: "10" }}>no tracks found</span>
+      )
+    } else if (tracks.length) {
+      return <TrackList tracks={tracks} />
+    }
+  }
+
   const handleCreateFork = async () => {
     setIsCreatingFork(true)
     try {
@@ -179,13 +195,17 @@ const playlists = () => {
               </div>
               <div className={styles.playlist__headerBg}></div>
               <div className={styles.playlist__imageContainer}>
-                <Image
-                  src={playlist.image ? playlist.image : "/placeholder.png"}
-                  width="250"
-                  height="250"
-                  layout="fixed"
-                  className={styles.playlist__image}
-                />
+                {!playlist.image ? (
+                  <Music width={250} height={250} />
+                ) : (
+                  <Image
+                    src={playlist.image ? playlist.image : "/placeholder.png"}
+                    width="250"
+                    height="250"
+                    layout="fixed"
+                    className={styles.playlist__image}
+                  />
+                )}
               </div>
 
               <div style={{ zIndex: "10", alignSelf: "end" }}>
@@ -247,11 +267,8 @@ const playlists = () => {
                 {" "}
               </div>
               <div className={styles.playlist__headerBgBot}></div>
-              {(!tracks.length && isLoading) || !tracks.length ? (
-                <Loading width={50} height={50} />
-              ) : (
-                <TrackList tracks={tracks} />
-              )}
+
+              {handleShowTracks()}
             </div>
           </div>
         ) : (
