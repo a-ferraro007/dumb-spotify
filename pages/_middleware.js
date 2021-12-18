@@ -17,6 +17,8 @@ export async function middleware(req, ev) {
     return NextResponse.redirect("/login")
   }
 
+  console.log("MIDDLEWARE RUN")
+
   try {
     if (access_token) {
       //using the get user route to verify the access token is still valid
