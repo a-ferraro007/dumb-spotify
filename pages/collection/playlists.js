@@ -10,7 +10,6 @@ export async function getServerSideProps(context) {
   const { refresh_token, user } = context.req.cookies
   let access_token = context.req.cookies.access_token
   const headers = context.res.getHeaders()
-  let props
 
   console.log("SERVERSIDE HEADERS:", headers)
   //need to check the set cookie header if the new access token
@@ -21,77 +20,42 @@ export async function getServerSideProps(context) {
       .find((row) => row.includes(`${"access_token"}=`))
       ?.split("=")[1]
     console.log("SERVERSIDE SET COOKIE:", headers["set-cookie"])
+  }
 
-    if (!user || !refresh_token)
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      }
-    let playlist
-    try {
-      playlist = await playlistsProps(
-        access_token,
-        refresh_token,
-        JSON.parse(user)
-      )
-
-      props = {
-        forked: playlist ? playlist.forked : [],
-        liked: playlist ? playlist.liked : [],
-        usr: JSON.parse(user),
-        propSession: {
-          access_token,
-          refresh_token,
-        },
-      }
-    } catch (error) {
-      console.error("playlist error", error)
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      }
+  if (!user || !refresh_token)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
     }
-  } else {
-    if (!user || !refresh_token)
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      }
-    let playlist
-    try {
-      playlist = await playlistsProps(
-        access_token,
-        refresh_token,
-        JSON.parse(user)
-      )
-      props = {
-        forked: playlist ? playlist.forked : [],
-        liked: playlist ? playlist.liked : [],
-        usr: JSON.parse(user),
-        propSession: {
-          access_token,
-          refresh_token,
-        },
-      }
-    } catch (error) {
-      console.error("playlist error", error)
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      }
+  let playlist
+  try {
+    playlist = await playlistsProps(
+      access_token,
+      refresh_token,
+      JSON.parse(user)
+    )
+  } catch (error) {
+    console.error("playlist error", error)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
     }
   }
 
   return {
-    props,
+    props: {
+      forked: playlist ? playlist.forked : [],
+      liked: playlist ? playlist.liked : [],
+      usr: JSON.parse(user),
+      propSession: {
+        access_token: access_token ? access_token : setCookieToken,
+        refresh_token,
+      },
+    },
   }
 }
 
