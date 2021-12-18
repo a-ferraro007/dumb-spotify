@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getNewAccessToken } from "../lib/spotify/utils"
+import { getNewAccessToken } from "../../lib/spotify/utils"
 
 export async function middleware(req, ev) {
   const next = NextResponse.next()
