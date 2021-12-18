@@ -12,7 +12,8 @@ import { useRouter } from "next/router"
 import Music from "../../components/SVG/Music"
 
 export async function getServerSideProps(context) {
-  const { access_token, refresh_token, user } = context.req.cookies
+  const { refresh_token, user } = context.req.cookies
+  let access_token = context.req.cookies.access_token
   const headers = context.res.getHeaders()
   let setCookieToken
 
@@ -20,7 +21,7 @@ export async function getServerSideProps(context) {
   //need to check the set cookie header if the new access token
   //comes from refreshing the current page
   if (headers["set-cookie"]) {
-    setCookieToken = headers["set-cookie"][0]
+    access_token = headers["set-cookie"][0]
       .split(";")
       .find((row) => row.includes(`${"access_token"}=`))
       ?.split("=")[1]
@@ -39,7 +40,7 @@ export async function getServerSideProps(context) {
     props: {
       usr: JSON.parse(user),
       propSession: {
-        access_token: access_token ? access_token : setCookieToken,
+        access_token,
         refresh_token,
       },
     },
