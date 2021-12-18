@@ -5,6 +5,7 @@ export async function middleware(req, ev) {
   const next = NextResponse.next()
   const { user, access_token, refresh_token } = req.cookies
 
+  console.log(req.url)
   if (
     req.url !== "/" &&
     req.url !== "/collection/playlists" &&
