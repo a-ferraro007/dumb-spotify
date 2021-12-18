@@ -16,6 +16,7 @@ export async function getServerSideProps(context) {
   const headers = context.res.getHeaders()
   let setCookieToken
 
+  console.log("SERVERSIDE HEADERS:", headers)
   //need to check the set cookie header if the new access token
   //comes from refreshing the current page
   if (headers["set-cookie"]) {
@@ -23,6 +24,8 @@ export async function getServerSideProps(context) {
       .split(";")
       .find((row) => row.includes(`${"access_token"}=`))
       ?.split("=")[1]
+
+    console.log("SERVERSIDE SET COOKIE:", headers["set-cookie"])
   }
 
   if (!user || !refresh_token)
