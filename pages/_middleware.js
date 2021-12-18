@@ -10,6 +10,7 @@ export async function middleware(req, ev) {
     req.url !== "/collection/playlists" &&
     !req.url.includes("/playlists/")
   ) {
+    console.log("MIDDLEWARE NOT RUN", req.url)
     return next
   }
 
