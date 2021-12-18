@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
   const getUser = async (token) => {
     try {
       const userReq = await fetch(`/api/spotify/getUser?access_token=${token}`)
-      const { user } = await userReq.json()
+      const user = await userReq.json()
       return user
     } catch (error) {
       throw error

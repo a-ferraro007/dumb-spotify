@@ -13,6 +13,18 @@ import Music from "../../components/SVG/Music"
 
 export async function getServerSideProps(context) {
   const { access_token, refresh_token, user } = context.req.cookies
+  const headers = context.res.getHeaders()
+  let setCookieToken
+
+  //need to check the set cookie header if the new access token
+  //comes from refreshing the current page
+  if (headers["set-cookie"]) {
+    setCookieToken = headers["set-cookie"][0]
+      .split(";")
+      .find((row) => row.includes(`${"access_token"}=`))
+      ?.split("=")[1]
+  }
+
   if (!user || !refresh_token)
     return {
       redirect: {
@@ -23,7 +35,10 @@ export async function getServerSideProps(context) {
   return {
     props: {
       usr: JSON.parse(user),
-      propSession: { access_token, refresh_token },
+      propSession: {
+        access_token: access_token ? access_token : setCookieToken,
+        refresh_token,
+      },
     },
   }
 }

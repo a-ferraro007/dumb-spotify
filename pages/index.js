@@ -19,18 +19,19 @@ const getGreeting = () => {
 
 export async function getServerSideProps(context) {
   const { access_token, refresh_token, user } = context.req.cookies
-  if (!user || !refresh_token)
+  if (!user || !refresh_token) {
     return {
       redirect: {
         destination: "/login",
         permanent: false,
       },
     }
+  }
 
   return {
     props: {
       user: JSON.parse(user),
-      session: { access_token, refresh_token },
+      session: { access_token: access_token ?? null, refresh_token },
     },
   }
 }
