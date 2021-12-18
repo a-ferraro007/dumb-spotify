@@ -5,7 +5,6 @@ export async function middleware(req, ev) {
   const next = NextResponse.next()
   const { user, access_token, refresh_token } = req.cookies
 
-  console.log(req.url)
   if (
     req.url !== "/" &&
     req.url !== "/collection/playlists" &&
@@ -18,7 +17,7 @@ export async function middleware(req, ev) {
     return NextResponse.redirect("/login")
   }
 
-  console.log("MIDDLEWARE RUN")
+  console.log("MIDDLEWARE RUN", req.url)
 
   try {
     if (access_token) {
