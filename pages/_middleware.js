@@ -5,7 +5,16 @@ export async function middleware(req, ev) {
   const next = NextResponse.next()
   const { user, access_token, refresh_token } = req.cookies
 
-  if (
+  if (process.env.NODE_ENV === "production") {
+    if (
+      req.url !== `${process.env.BASE_URL}/` &&
+      req.url !== `${process.env.BASE_URL}/collection/playlists` &&
+      !req.url.includes(`/playlists/`)
+    ) {
+      console.log("MIDDLEWARE NOT RUN", req.url)
+      return next
+    }
+  } else if (
     req.url !== "/" &&
     req.url !== "/collection/playlists" &&
     !req.url.includes("/playlists/")
