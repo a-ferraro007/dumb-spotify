@@ -49,7 +49,7 @@ export async function middleware(req, ev) {
           refresh_token
         )
         next.cookie("access_token", access_token)
-        console.log("MIDDLEWARE RUN", next.cookies)
+        console.log("MIDDLEWARE COOKIES", next.cookies)
       }
     }
 
@@ -58,10 +58,13 @@ export async function middleware(req, ev) {
         refresh_token
       )
       next.cookie("access_token", access_token)
+      console.log("MIDDLEWARE COOKIES", next.cookies)
     }
   } catch (error) {
     console.error(error)
     return NextResponse.redirect("/login")
   }
+
+  console.log("MIDDLEWARE COOKIES END", next.cookies)
   return next
 }
