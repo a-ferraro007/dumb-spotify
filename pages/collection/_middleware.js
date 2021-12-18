@@ -40,6 +40,7 @@ export async function middleware(req, ev) {
         },
       })
       const data = await userReq.json()
+      console.log("MIDDLEWARE RUN", data)
       if (data.error && data.error?.status !== 401) {
         // errors that arent from an invalid token throw and redirect to login page
         throw new Error(data.error.message)
@@ -48,6 +49,7 @@ export async function middleware(req, ev) {
           refresh_token
         )
         next.cookie("access_token", access_token)
+        console.log("MIDDLEWARE RUN", next.cookies)
       }
     }
 
