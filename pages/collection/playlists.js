@@ -17,7 +17,7 @@ export async function getServerSideProps(context) {
   if (headers["set-cookie"]) {
     access_token = headers["set-cookie"][0]
       .split(";")
-      .find((row) => row.includes(`${"access_token"}=`))
+      .find((row) => row.includes("access_token="))
       ?.split("=")[1]
     console.log("SERVERSIDE SET COOKIE:", headers["set-cookie"])
   }
@@ -52,7 +52,7 @@ export async function getServerSideProps(context) {
       liked: playlist ? playlist.liked : [],
       usr: JSON.parse(user),
       propSession: {
-        access_token: access_token ? access_token : setCookieToken,
+        access_token,
         refresh_token,
       },
     },
