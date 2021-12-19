@@ -48,7 +48,7 @@ export async function middleware(req, ev) {
           refresh_token
         )
 
-        next.headers.append("Set-Cookie", `access_token=${access_token}`)
+        next.headers.append("set-cookie", `access_token=${access_token}`)
         //next.cookie("access_token", access_token)
       }
     }
@@ -57,7 +57,7 @@ export async function middleware(req, ev) {
       const { access_token, expires_in } = await getNewAccessToken(
         refresh_token
       )
-      next.headers.append("Set-Cookie", `access_token=${access_token}`)
+      next.headers.append("set-cookie", `access_token=${access_token}`)
       next.headers.forEach((v, k) => {
         console.log("header", v, k)
       })
