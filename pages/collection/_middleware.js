@@ -49,7 +49,10 @@ export async function middleware(req, ev) {
           refresh_token
         )
         //next.cookie("access_token", access_token)
-        next.headers.append("Set-Cookie", `access_token=${access_token}`)
+        next.headers.append(
+          "Set-Cookie",
+          `access_token=${access_token};path=/;max-age=${expires_in};`
+        )
         console.log("MIDDLEWARE COOKIES", next)
         next.headers.forEach((v, k) => {
           console.log("e", v, k)
@@ -62,7 +65,10 @@ export async function middleware(req, ev) {
         refresh_token
       )
       //next.cookie("access_token", access_token)
-      next.headers.append("Set-Cookie", `access_token=${access_token}`)
+      next.headers.append(
+        "Set-Cookie",
+        `access_token=${access_token};path=/;max-age=${expires_in};`
+      )
       console.log("MIDDLEWARE COOKIES", next.cookies)
       next.headers.forEach((v, k) => {
         console.log("header", v, k)
