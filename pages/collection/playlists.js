@@ -9,17 +9,18 @@ import { playlistsProps } from "../../lib/spotify/serverProps"
 export async function getServerSideProps(context) {
   const { refresh_token, user } = context.req.cookies
   let access_token = context.req.cookies.access_token
-  const headers = context.res.getHeaders()
+  context.res.he
+  const header = context.res.getHeader("Set-Cookie")
 
-  console.log("SERVERSIDE HEADERS:", headers)
+  console.log("SERVERSIDE HEADERS:", header)
   //need to check the set cookie header if the new access token
   //comes from refreshing the current page
-  if (headers["set-cookie"]) {
-    access_token = headers["set-cookie"][0]
+  if (header) {
+    access_token = header[0]
       .split(";")
       .find((row) => row.includes("access_token="))
       ?.split("=")[1]
-    console.log("SERVERSIDE SET COOKIE:", headers["set-cookie"])
+    console.log("SERVERSIDE SET COOKIE:", header[0])
   }
 
   if (!user || !refresh_token)
