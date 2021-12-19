@@ -47,12 +47,7 @@ export async function middleware(req, ev) {
         const { access_token, expires_in } = await getNewAccessToken(
           refresh_token
         )
-
-        next.headers.append(
-          "Set-Cookie",
-          `access_token=${access_token};path=/;max-age=${expires_in};`
-        )
-        //next.cookie("access_token", access_token)
+        next.cookie("access_token", access_token, { maxApe: expires_in })
       }
     }
 
@@ -60,10 +55,7 @@ export async function middleware(req, ev) {
       const { access_token, expires_in } = await getNewAccessToken(
         refresh_token
       )
-      next.headers.append(
-        "Set-Cookie",
-        `access_token=${access_token};path=/;max-age=${expires_in};`
-      )
+      next.cookie("access_token", access_token, { maxApe: expires_in })
       next.headers.forEach((v, k) => {
         console.log("header", v, k)
       })
