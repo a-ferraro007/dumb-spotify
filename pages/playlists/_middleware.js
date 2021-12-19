@@ -40,6 +40,7 @@ export async function middleware(req, ev) {
         },
       })
       const data = await userReq.json()
+      console.log("MIDDLEWARE RUN", data)
       if (data.error && data.error?.status !== 401) {
         // errors that arent from an invalid token throw and redirect to login page
         throw new Error(data.error.message)
@@ -47,7 +48,13 @@ export async function middleware(req, ev) {
         const { access_token, expires_in } = await getNewAccessToken(
           refresh_token
         )
-        next.cookie("access_token", access_token, { maxApe: expires_in })
+
+        next.cookie("access_token", access_token, {
+          maxAge: expires_in,
+          sameSite: "none",
+          secure: true,
+        })
+        console.log("MIDDLEWARE COOKIES", next)
       }
     }
 
@@ -55,14 +62,19 @@ export async function middleware(req, ev) {
       const { access_token, expires_in } = await getNewAccessToken(
         refresh_token
       )
-      next.cookie("access_token", access_token, { maxApe: expires_in })
-      next.headers.forEach((v, k) => {
-        console.log("header", v, k)
+
+      next.cookie("access_token", access_token, {
+        maxAge: expires_in,
+        sameSite: "none",
+        secure: true,
       })
+      console.log("MIDDLEWARE COOKIES", next.cookies)
     }
   } catch (error) {
     console.error(error)
     return NextResponse.redirect("/login")
   }
+
+  console.log("MIDDLEWARE COOKIES END", next.cookies)
   return next
 }

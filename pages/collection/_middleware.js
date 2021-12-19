@@ -49,7 +49,11 @@ export async function middleware(req, ev) {
           refresh_token
         )
 
-        next.cookie("access_token", access_token, { maxApe: expires_in })
+        next.cookie("access_token", access_token, {
+          maxAge: expires_in,
+          sameSite: "none",
+          secure: true,
+        })
         console.log("MIDDLEWARE COOKIES", next)
       }
     }
@@ -59,7 +63,11 @@ export async function middleware(req, ev) {
         refresh_token
       )
 
-      next.cookie("access_token", access_token, { maxApe: expires_in })
+      next.cookie("access_token", access_token, {
+        maxAge: expires_in,
+        sameSite: "none",
+        secure: true,
+      })
       console.log("MIDDLEWARE COOKIES", next.cookies)
     }
   } catch (error) {
