@@ -9,7 +9,7 @@ import { playlistsProps } from "../../lib/spotify/serverProps"
 export async function getServerSideProps(context) {
   const { refresh_token, user } = context.req.cookies
   let access_token = context.req.cookies.access_token
-  context.res.he
+  console.log(context.res.getRawHeaderNames())
   const header = context.res.getHeader("Set-Cookie")
 
   console.log("SERVERSIDE HEADERS:", header)
