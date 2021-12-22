@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
           </Hydrate>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/*<ReactQueryDevtools initialIsOpen={false} />*/}
         </QueryClientProvider>
       </PlaylistProvider>
     </AuthProvider>
