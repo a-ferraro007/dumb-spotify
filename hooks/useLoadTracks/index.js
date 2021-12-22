@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 
-const loadTracks = async (playlist, access_token, trackTotal, reqCount) => {
+const loadTracks = async (playlist, access_token) => {
   try {
     const tracks = await fetch(
       `/api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
@@ -15,10 +15,9 @@ const loadTracks = async (playlist, access_token, trackTotal, reqCount) => {
   }
 }
 
-const useLoadTracks = (playlist, access_token, trackTotal, reqCount) => {
-  return useQuery(
-    ["load-tracks", { playlist, access_token, trackTotal, reqCount }],
-    () => loadTracks(playlist, access_token, trackTotal, reqCount)
+const useLoadTracks = (playlist, access_token) => {
+  return useQuery(["load-tracks", { playlist, access_token }], () =>
+    loadTracks(playlist, access_token)
   )
 }
 
