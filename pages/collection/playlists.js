@@ -4,15 +4,18 @@ import { usePlaylist } from "../../context/playlist"
 import styles from "../../styles/Fork.module.css"
 import PlaylistCard from "../../components/PlaylistCard"
 import Layout from "../../components/Layout"
-import { playlistsProps } from "../../lib/spotify/serverProps"
+import { dehydrate, QueryClient, useQuery } from "react-query"
+import { loadPlaylists } from "../../lib/spotify/utils"
+import { useLoadPlaylists } from "../../hooks"
 
 export async function getServerSideProps(context) {
-  const { refresh_token, user } = context.req.cookies
+  const qc = new QueryClient()
+  const { refresh_token } = context.req.cookies
+  const cookie = context.req.cookies
+  const user = JSON.parse(cookie.user)
   let access_token = context.req.cookies.access_token
-
   const header = context.res.getHeader("Set-Cookie")
 
-  console.log("SERVERSIDE HEADERS:", header)
   //need to check the set cookie header if the new access token
   //comes from refreshing the current page
   if (header) {
@@ -20,7 +23,6 @@ export async function getServerSideProps(context) {
       .split(";")
       .find((row) => row.includes("access_token="))
       ?.split("=")[1]
-    console.log("SERVERSIDE SET COOKIE:", header[0])
   }
 
   if (!user || !refresh_token)
@@ -30,12 +32,14 @@ export async function getServerSideProps(context) {
         permanent: false,
       },
     }
-  let playlist
+
   try {
-    playlist = await playlistsProps(
-      access_token,
-      refresh_token,
-      JSON.parse(user)
+    await qc.prefetchQuery(
+      ["load-playlists", { access_token, user }],
+      () => {
+        return loadPlaylists(access_token, user)
+      },
+      { staleTime: 5000 }
     )
   } catch (error) {
     console.error("playlist error", error)
@@ -49,58 +53,41 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      forked: playlist ? playlist.forked : [],
-      liked: playlist ? playlist.liked : [],
-      usr: JSON.parse(user),
+      user: user,
       propSession: {
         access_token,
         refresh_token,
       },
+      dehydratedState: dehydrate(qc),
     },
   }
 }
 
-const Playlist = ({ forked, liked, usr, propSession }) => {
-  const [userPlaylists, setUserPlaylists] = useState(liked)
-  const [forkedPlaylists, setForkedPlaylists] = useState(forked)
+const Playlist = ({ user, propSession }) => {
   const { setUser, setSession } = useAuth()
   const { radioBtnState } = usePlaylist()
+  const { data, isLoading, isFetching } = useLoadPlaylists(
+    propSession.access_token,
+    user
+  )
 
   useEffect(() => {
-    setUser(usr)
+    setUser(user)
     setSession(propSession)
   }, [])
-
-  //useEffect(() => {
-  //  console.log("rad", radioBtnState)
-  //  const token = getCookie("refresh_token")
-  //  if (token) {
-  //    ;(async () => {
-  //      try {
-  //        await getNewAuthTokens(token)
-  //      } catch (error) {
-  //        console.log("error generating new auth token", error)
-  //        router.replace("/login")
-  //      }
-  //    })()
-  //    setRefreshToken(token)
-  //  } else {
-  //    router.replace("/login")
-  //  }
-  //}, [])
 
   return (
     <Layout props={radioBtnState}>
       <>
         {radioBtnState === "liked" ? (
           <div className={styles.playlist__grid}>
-            {userPlaylists?.map((playlist, index) => {
+            {data?.liked?.map((playlist, index) => {
               return <PlaylistCard key={index} playlist={playlist} />
             })}
           </div>
         ) : (
           <div className={styles.playlist__grid}>
-            {forkedPlaylists?.map((playlist, index) => {
+            {data?.forked?.map((playlist, index) => {
               return (
                 <PlaylistCard
                   key={index}

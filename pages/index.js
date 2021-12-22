@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
-import router from "next/router"
 import Layout from "../components/Layout"
 import Link from "next/link"
-import { getCookie } from "../lib/getCookie"
 import { useAuth } from "../context/auth"
 import styles from "../styles/Home.module.css"
 import { usePlaylist } from "../context/playlist"

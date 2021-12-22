@@ -7,15 +7,14 @@ import styles from "../.././styles/Playlist.module.css"
 import Image from "next/image"
 import ForkIcon from "../../components/SVG/ForkIcon"
 import Loading from "../../components/SVG/Loading"
-import { getCookie } from "../../lib/getCookie"
 import { useRouter } from "next/router"
 import Music from "../../components/SVG/Music"
+import { useLoadPlaylist, useLoadTracks } from "../../hooks"
 
 export async function getServerSideProps(context) {
   const { refresh_token, user } = context.req.cookies
   let access_token = context.req.cookies.access_token
   const headers = context.res.getHeaders()
-  let setCookieToken
 
   console.log("SERVERSIDE HEADERS:", headers)
   //need to check the set cookie header if the new access token
@@ -49,7 +48,7 @@ export async function getServerSideProps(context) {
 
 const playlists = ({ usr, propSession }) => {
   const {
-    playlist,
+    playlist: ctxPlaylist,
     masterId,
     mood,
     handleSetMasterId,
@@ -57,78 +56,32 @@ const playlists = ({ usr, propSession }) => {
     handleSetRadioBtn,
     handleSetMood,
   } = usePlaylist()
-  const [tracks, setTracks] = useState([])
+
   const { session, user, setUser, setSession } = useAuth()
   const [isCreatingFork, setIsCreatingFork] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+  const { playlistId } = router.query
+  const { data: playlist, isLoading: loadingPlaylist } = useLoadPlaylist(
+    ctxPlaylist,
+    playlistId,
+    propSession.access_token,
+    usr
+  )
+
+  const { data: tracks, isLoading } = useLoadTracks(
+    playlist,
+    propSession.access_token
+  )
+
+  useEffect(() => {
+    if (playlist?.playlistId) handleSetPlaylist(playlist)
+  }, [playlist])
 
   useEffect(() => {
     handleSetMood("rgb(80, 56, 160)")
     setUser(usr)
     setSession(propSession)
   }, [])
-
-  useEffect(() => {
-    ;(async () => {
-      if (!session) return
-      if (!playlist.playlistId) {
-        const { playlistId } = router.query
-
-        try {
-          const getForkedPlaylistsRes = await fetch(
-            `/api/supabase/getForkedPlaylists?id=${user.id}&playlist_id=${playlistId}`
-          )
-          const forkedPlaylist = await getForkedPlaylistsRes.json()
-          if (getForkedPlaylistsRes.status === 400) {
-            throw new Error(forkedPlaylist.error)
-          }
-          if (forkedPlaylist.length > 0) {
-            handleSetPlaylist({ ...forkedPlaylist[0].playlist, isFork: true })
-          } else {
-            const getPlaylistRes = await fetch(
-              `/api/spotify/getPlaylist?playlist_id=${playlistId}&access_token=${session.access_token}`
-            )
-
-            const playlistObj = await getPlaylistRes.json()
-            const playlist = {
-              name: playlistObj.name,
-              playlistId: playlistObj.id,
-              trackCount: playlistObj.tracks,
-              trackTotal: playlistObj.tracks.total,
-              reqCount: Math.round(playlistObj.tracks.total / 100 + 0.5),
-              owner: playlistObj.owner,
-              image: playlistObj?.images[0]?.url,
-              description: playlistObj.description,
-            }
-            handleSetPlaylist(playlist)
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      }
-    })()
-  }, [session])
-
-  useEffect(() => {
-    ;(async () => {
-      if (!session || !user) return
-      try {
-        setIsLoading(true)
-        const tracks = await fetch(
-          `/api/spotify/getTracksList?id=${playlist.playlistId}&access_token=${session.access_token}&total=${playlist.trackTotal}&reqCount=${playlist.reqCount}`
-        )
-        const tracksRes = await tracks.json()
-        const trackItems = tracksRes.tracks?.map((item) => {
-          return item.track
-        })
-        setIsLoading(false)
-        setTracks([...trackItems])
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [session, playlist])
 
   const handleOnClick = async () => {
     if (playlist.isFork) {
@@ -138,17 +91,13 @@ const playlists = ({ usr, propSession }) => {
     }
   }
 
-  useEffect(() => {
-    console.log(isLoading, tracks.length)
-  }, [isLoading])
-
   const handleShowTracks = () => {
-    if (!tracks.length && isLoading) return <Loading width={50} height={50} />
-    else if (!tracks.length && !isLoading) {
+    if (!tracks?.length && isLoading) return <Loading width={50} height={50} />
+    else if (!tracks?.length && !isLoading) {
       return (
         <span style={{ color: "#fff", zIndex: "10" }}>no tracks found</span>
       )
-    } else if (tracks.length) {
+    } else if (tracks?.length) {
       return <TrackList tracks={tracks} />
     }
   }
@@ -159,7 +108,7 @@ const playlists = ({ usr, propSession }) => {
       const forkPlaylist = await fetch(`/api/spotify/forkPlaylist`, {
         method: "POST",
         body: JSON.stringify({
-          access_token: session.access_token,
+          access_token: propSession.access_token,
           user: user.id,
           name: playlist.name,
           reqCount: playlist.reqCount,
@@ -183,6 +132,7 @@ const playlists = ({ usr, propSession }) => {
     }
   }
 
+  //REACT QUERY MUTATION?
   const handleUpdateForkedPlaylist = async () => {
     try {
       await fetch(
@@ -209,114 +159,126 @@ const playlists = ({ usr, propSession }) => {
   //  }
   //}
 
-  if (!playlist) return <> </>
   return (
     <>
       <Layout>
-        {!isCreatingFork ? (
-          <div className={styles.playlist__container}>
-            <div className={styles.playlist__headerContainer}>
-              <div
-                className={styles.playlist__headerBgColor}
-                style={{ backgroundColor: mood }}
-              >
-                {" "}
-              </div>
-              <div className={styles.playlist__headerBg}></div>
-              <div className={styles.playlist__imageContainer}>
-                {!playlist.image ? (
-                  <Music width={250} height={250} />
-                ) : (
-                  <Image
-                    src={playlist.image ? playlist.image : "/placeholder.png"}
-                    width="250"
-                    height="250"
-                    layout="fixed"
-                    className={styles.playlist__image}
-                  />
-                )}
-              </div>
-
-              <div style={{ zIndex: "10", alignSelf: "end" }}>
-                <span
-                  className={styles.playlist__subscript}
-                  style={{ color: "var(--primary-text-green)" }}
-                >
-                  {playlist.isFork ? "FORK" : "LIKED"}
-                </span>
-                <h1 className={styles.playlist__heading}> {playlist.name} </h1>
-                <p className={styles.playlist__description}>
-                  {playlist.description}
-                </p>
-                <div className={styles.playlist__btnBar}>
-                  <div className={styles.playlist__subscriptContainer}>
-                    <span className={styles.playlist__subscript}>
-                      {" "}
-                      {playlist.owner?.display_name}
-                    </span>
-                    <span className={styles.playlist__subscript}>
-                      {" "}
-                      {playlist.trackTotal} songs
-                    </span>
+        {!playlist ? (
+          <></>
+        ) : (
+          <>
+            {!isCreatingFork ? (
+              <div className={styles.playlist__container}>
+                <div className={styles.playlist__headerContainer}>
+                  <div
+                    className={styles.playlist__headerBgColor}
+                    style={{ backgroundColor: mood }}
+                  >
+                    {" "}
+                  </div>
+                  <div className={styles.playlist__headerBg}></div>
+                  <div className={styles.playlist__imageContainer}>
+                    {!playlist.image ? (
+                      <Music width={250} height={250} />
+                    ) : (
+                      <Image
+                        src={
+                          playlist.image ? playlist.image : "/placeholder.png"
+                        }
+                        width="250"
+                        height="250"
+                        layout="fixed"
+                        className={styles.playlist__image}
+                      />
+                    )}
                   </div>
 
-                  {playlist.isFork ? (
-                    <button onClick={handleOnClick} className={styles.btn}>
-                      <div className={styles.fork__btnIcon}>
-                        <ForkIcon />
+                  <div style={{ zIndex: "10", alignSelf: "end" }}>
+                    <span
+                      className={styles.playlist__subscript}
+                      style={{ color: "var(--primary-text-green)" }}
+                    >
+                      {playlist.isFork ? "FORK" : "LIKED"}
+                    </span>
+                    <h1 className={styles.playlist__heading}>
+                      {" "}
+                      {playlist.name}{" "}
+                    </h1>
+                    <p className={styles.playlist__description}>
+                      {playlist.description}
+                    </p>
+                    <div className={styles.playlist__btnBar}>
+                      <div className={styles.playlist__subscriptContainer}>
+                        <span className={styles.playlist__subscript}>
+                          {" "}
+                          {playlist.owner?.display_name}
+                        </span>
+                        <span className={styles.playlist__subscript}>
+                          {" "}
+                          {playlist.trackTotal} songs
+                        </span>
                       </div>
-                      <span className={styles.fork__btnText}> update </span>
-                    </button>
-                  ) : (
-                    <button onClick={handleOnClick} className={styles.btn}>
-                      <div className={styles.fork__btnIcon}>
-                        <ForkIcon />
-                      </div>
-                      <span className={styles.fork__btnText}> fork </span>
-                    </button>
-                  )}
-                  {/*<button
+
+                      {playlist.isFork ? (
+                        <button onClick={handleOnClick} className={styles.btn}>
+                          <div className={styles.fork__btnIcon}>
+                            <ForkIcon />
+                          </div>
+                          <span className={styles.fork__btnText}> update </span>
+                        </button>
+                      ) : (
+                        <button onClick={handleOnClick} className={styles.btn}>
+                          <div className={styles.fork__btnIcon}>
+                            <ForkIcon />
+                          </div>
+                          <span className={styles.fork__btnText}> fork </span>
+                        </button>
+                      )}
+                      {/*<button
                     style={{ color: "#fff" }}
                     onClick={handleDeletePlaylist}
                   >
                     delete
                   </button>*/}
-                </div>{" "}
-              </div>
-            </div>
+                    </div>{" "}
+                  </div>
+                </div>
 
-            <div
-              className={styles.playlist__tracksContainer}
-              style={{ position: "relative" }}
-            >
-              <div
-                className={styles.playlist__headerBgColorBot}
-                style={{ backgroundColor: mood }}
-              >
-                {" "}
-              </div>
-              <div className={styles.playlist__headerBgBot}></div>
+                <div
+                  className={styles.playlist__tracksContainer}
+                  style={{ position: "relative" }}
+                >
+                  <div
+                    className={styles.playlist__headerBgColorBot}
+                    style={{ backgroundColor: mood }}
+                  >
+                    {" "}
+                  </div>
+                  <div className={styles.playlist__headerBgBot}></div>
 
-              {handleShowTracks()}
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className={styles.creating__fork}>
-              {" "}
-              <Loading width={50} height={50} />
-              <span className={styles.creating__forkHeading}>
-                forking:{" "}
-                <span style={{ color: "rgba(255,255,255,1)" }}>
+                  {handleShowTracks()}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className={styles.creating__fork}>
                   {" "}
-                  {playlist.name}{" "}
-                </span>
-              </span>{" "}
-              <span style={{ color: "rgba(255,255,255,.7)", fontSize: "14px" }}>
-                {" "}
-                this may take a minute
-              </span>
-            </div>
+                  <Loading width={50} height={50} />
+                  <span className={styles.creating__forkHeading}>
+                    forking:{" "}
+                    <span style={{ color: "rgba(255,255,255,1)" }}>
+                      {" "}
+                      {playlist.name}{" "}
+                    </span>
+                  </span>{" "}
+                  <span
+                    style={{ color: "rgba(255,255,255,.7)", fontSize: "14px" }}
+                  >
+                    {" "}
+                    this may take a minute
+                  </span>
+                </div>
+              </>
+            )}
           </>
         )}
       </Layout>
