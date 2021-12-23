@@ -67,7 +67,7 @@
   stroke: rgba(255, 255, 255, 1);
   color: rgba(255, 255, 255, 1);
   transition: cubic-bezier(0.19, 1, 0.22, 1);
-  transition-duration: 1.5s;
+  transition-duration: 0.75s;
 }
 
 .sideNav__liLinkActive {
