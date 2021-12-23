@@ -18,6 +18,7 @@ export default async (req, res) => {
       },
       body: params,
     })
+    if (!resp.ok) throw new Error("Error returning Access Token")
     const data = await resp.json()
     res.status(200).json(data)
   } catch (error) {

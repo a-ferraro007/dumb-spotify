@@ -34,7 +34,7 @@ export async function getServerSideProps(context) {
     }
 
   try {
-    await qc.prefetchQuery(
+    await qc.fetchQuery(
       ["load-playlists", { access_token, user }],
       () => {
         return loadPlaylists(access_token, user)
