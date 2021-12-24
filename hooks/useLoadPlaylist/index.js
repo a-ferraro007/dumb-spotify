@@ -14,7 +14,7 @@ const loadPlaylist = async (playlist, playlistId, access_token, user) => {
       throw new Error(forkedPlaylist.error)
     }
     if (forkedPlaylist.length > 0) {
-      return { ...forkedPlaylist[0], isFork: true }
+      return { ...forkedPlaylist[0]?.playlist, isFork: true }
     } else {
       const getPlaylistRes = await fetch(
         `/api/spotify/getPlaylist?playlist_id=${playlistId}&access_token=${access_token}`
