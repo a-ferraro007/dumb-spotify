@@ -42,9 +42,9 @@ export default async (req, res) => {
       {
         name: createPlaylistRes.name,
         playlistId: createPlaylistRes.id,
-        trackCount: createPlaylistRes.tracks,
-        trackTotal: createPlaylistRes.tracks.total,
-        reqCount: Math.round(createPlaylistRes.tracks.total / 100 + 0.5),
+        //trackCount: createPlaylistRes.tracks,
+        trackTotal: trackUris.length, //createPlaylistRes.tracks.total,
+        reqCount: reqCount, //Math.round(createPlaylistRes.tracks.total / 100 + 0.5),
         owner: createPlaylistRes.owner,
         image,
       }

@@ -10,6 +10,7 @@ import Loading from "../../components/SVG/Loading"
 import { useRouter } from "next/router"
 import Music from "../../components/SVG/Music"
 import { useLoadPlaylist, useLoadTracks } from "../../hooks"
+import { useUpdateForkedPlaylist } from "../../hooks/useUpdatePlaylist"
 
 export async function getServerSideProps(context) {
   const { refresh_token, user } = context.req.cookies
@@ -55,8 +56,7 @@ const playlists = ({ usr, propSession }) => {
     handleSetPlaylist,
     handleSetRadioBtn,
     handleSetMood,
-  } = usePlaylist()
-
+  } = usePlaylist() //normalize playlist data vs refresh
   const { session, user, setUser, setSession } = useAuth()
   const [isCreatingFork, setIsCreatingFork] = useState(false)
   const router = useRouter()
@@ -67,11 +67,11 @@ const playlists = ({ usr, propSession }) => {
     propSession.access_token,
     usr
   )
-
   const { data: tracks, isLoading } = useLoadTracks(
     playlist,
     propSession.access_token
   )
+  const updateForkedPlaylistMutation = useUpdateForkedPlaylist()
 
   useEffect(() => {
     if (playlist?.playlistId) handleSetPlaylist(playlist)
@@ -83,15 +83,26 @@ const playlists = ({ usr, propSession }) => {
     setSession(propSession)
   }, [])
 
+  useEffect(() => {
+    console.log(updateForkedPlaylistMutation)
+  }, [updateForkedPlaylistMutation])
+
   const handleOnClick = async () => {
     if (playlist.isFork) {
-      await handleUpdateForkedPlaylist()
+      updateForkedPlaylistMutation.mutate({
+        accessToken: propSession.access_token,
+        playlist: playlist,
+        masterId: masterId ? masterId : playlist.masterId, //this shouldnt be necessary. normalize this data
+        userId: user.id,
+      })
+      //await handleUpdateForkedPlaylist()
     } else {
       await handleCreateFork()
     }
   }
 
   const handleShowTracks = () => {
+    console.log("show", tracks?.length)
     if (!tracks?.length && isLoading) return <Loading width={50} height={50} />
     else if (!tracks?.length && !isLoading) {
       return (

@@ -5,6 +5,7 @@ const loadPlaylist = async (playlist, playlistId, access_token, user) => {
     return new Promise((resolve) => {
       resolve(playlist)
     })
+
   try {
     const getForkedPlaylistsRes = await fetch(
       `/api/supabase/getForkedPlaylists?id=${user.id}&playlist_id=${playlistId}`
@@ -14,7 +15,11 @@ const loadPlaylist = async (playlist, playlistId, access_token, user) => {
       throw new Error(forkedPlaylist.error)
     }
     if (forkedPlaylist.length > 0) {
-      return { ...forkedPlaylist[0]?.playlist, isFork: true }
+      return {
+        ...forkedPlaylist[0]?.playlist,
+        isFork: true,
+        masterId: forkedPlaylist[0]["master_playlist_id"],
+      }
     } else {
       const getPlaylistRes = await fetch(
         `/api/spotify/getPlaylist?playlist_id=${playlistId}&access_token=${access_token}`

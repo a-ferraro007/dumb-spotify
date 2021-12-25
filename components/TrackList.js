@@ -3,6 +3,7 @@ import styles from ".././styles/TrackInfo.module.css"
 import Image from "next/image"
 
 const TrackList = ({ tracks }) => {
+  console.log("tracks", tracks)
   const [isSelected, setIsSelected] = useState(null)
   //console.log(tracks[4])
   const returnTime = (ms) => {
