@@ -14,8 +14,8 @@ const ForkIcon = () => {
         r="2"
         stroke="#fff"
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <circle
         cx="20"
@@ -23,8 +23,8 @@ const ForkIcon = () => {
         r="2"
         stroke="#fff"
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <circle
         cx="20"
@@ -32,22 +32,22 @@ const ForkIcon = () => {
         r="2"
         stroke="#fff"
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M18 7H6"
         stroke="#fff"
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M7 7V7C8.65685 7 10 8.34315 10 10V15C10 16.1046 10.8954 17 12 17H18"
         stroke="#fff"
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
