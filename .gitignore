@@ -32,3 +32,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+#old favicon
+favicon1.png
